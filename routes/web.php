@@ -1,0 +1,71 @@
+<?php
+
+use App\Http\Controllers\AllergyController;
+use App\Http\Controllers\EmergencyContactController;
+use App\Http\Controllers\HealthInsuranceController;
+use App\Http\Controllers\InstructionsController;
+use App\Http\Controllers\MedicationController;
+use App\Http\Controllers\PetOwnerController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilesController;
+use App\Http\Controllers\VetDetailsController;
+use App\Http\Controllers\VitalMedicalConditionController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('auth.login');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+//----------Routes for Manage Profiles----------//
+    // Show all profiles
+        Route::get('/profiles', [ProfilesController::class, 'index'])->name('profiles.index');
+
+    // Show form to create a new profile
+        Route::get('/profiles/create', [ProfilesController::class, 'create'])->name('profiles.create');
+
+    // Store new profile
+        Route::post('/profiles', [ProfilesController::class, 'store'])->name('profiles.store');
+
+    // Show a single profile
+    //    Route::get('/profiles/{profile}', [ProfilesController::class, 'show'])->name('profiles.show');
+
+    // Show form to edit a profile
+        Route::get('/profiles/{profile}/edit', [ProfilesController::class, 'edit'])->name('profiles.edit');
+
+    // Update a profile
+        Route::put('/profiles/{profile}', [ProfilesController::class, 'update'])->name('profiles.update');
+        Route::patch('/profiles/{profile}', [ProfilesController::class, 'update']); // optional for PATCH requests
+
+    // Delete a profile
+        Route::delete('/profiles/{profile}', [ProfilesController::class, 'destroy'])->name('profiles.destroy');
+
+
+    // EmergencyContact CRUD
+    Route::resource('profiles.emergency-contacts', EmergencyContactController::class)->only(['store', 'update', 'destroy']);
+    // Allergies CRUD
+    Route::resource('profiles.allergies', AllergyController::class)->only(['store', 'update', 'destroy']);
+    // Medication CRUD
+    Route::resource('profiles.medications', MedicationController::class)->only(['store', 'update', 'destroy']);
+    // Health Insurance CRUD
+    Route::resource('profiles.health-insurances', HealthInsuranceController::class)->only(['store', 'update', 'destroy']);
+    // Vital Medical Condition CRUD
+    Route::resource('profiles.vital-medical-conditions', VitalMedicalConditionController::class)->only(['store', 'update', 'destroy']);
+    // Pet Owner CRUD
+    Route::resource('profiles.pet-owners', PetOwnerController::class)->only(['store', 'update', 'destroy']);
+    // Vet Details CRUD
+    Route::resource('profiles.vet-details', VetDetailsController::class)->only(['store', 'update', 'destroy']);
+    // Instruction CRUD
+    Route::resource('profiles.instructions', InstructionsController::class)->only(['store', 'update', 'destroy']);
+});
+
+
+require __DIR__.'/auth.php';
