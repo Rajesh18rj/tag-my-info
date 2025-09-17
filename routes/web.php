@@ -8,6 +8,7 @@ use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\PetOwnerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilesController;
+use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\VetDetailsController;
 use App\Http\Controllers\VitalMedicalConditionController;
 use Illuminate\Support\Facades\Route;
@@ -48,7 +49,7 @@ Route::middleware('auth')->group(function () {
     // Delete a profile
         Route::delete('/profiles/{profile}', [ProfilesController::class, 'destroy'])->name('profiles.destroy');
 
-
+//----------Routes for Pop-up Modals----------//
     // EmergencyContact CRUD
     Route::resource('profiles.emergency-contacts', EmergencyContactController::class)->only(['store', 'update', 'destroy']);
     // Allergies CRUD
@@ -66,6 +67,15 @@ Route::middleware('auth')->group(function () {
     // Instruction CRUD
     Route::resource('profiles.instructions', InstructionsController::class)->only(['store', 'update', 'destroy']);
 });
+
+//----------Routes for Pop-up Modals----------//
+    Route::get('/qr-generate', [QrCodeController::class, 'generate'])->name('qr.generate');
+    Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
+    Route::get('/qr-form', [QrCodeController::class, 'showForm'])->name('qr.form');
+    Route::post('/qr-form', [QrCodeController::class, 'storeForm'])->name('qr.store');
+
+    Route::get('/qr-details/{id}', [QrCodeController::class, 'showDetails'])->name('qr.details');
+
 
 
 require __DIR__.'/auth.php';
