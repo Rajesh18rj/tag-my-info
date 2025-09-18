@@ -15,11 +15,14 @@
             </div>
         @endif
 
-{{--        <a href="{{ route('qr.form') }}"--}}
-{{--           class="inline-block px-5 py-2 mb-6 rounded bg-red-600 text-white hover:bg-red-700 transition font-medium shadow">--}}
-{{--            Map Data to Free QR--}}
-{{--        </a>--}}
-
+        <!-- Generate QR Code Button -->
+        <div class="mt-4 mb-10">
+        <a href="{{ route('qr.showGenerateForm') }}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold shadow">
+            Generate QR Codes
+        </a>
+        </div>
+        
         <div class="overflow-x-auto rounded shadow">
             <table class="w-full border-collapse bg-white rounded-lg overflow-hidden text-gray-700">
                 <thead>

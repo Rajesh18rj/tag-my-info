@@ -8,25 +8,25 @@ use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode as QrCodeGenerator;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Label\Label;
-use Endroid\QrCode\Label\Font\NotoSans;
-use Endroid\QrCode\Color\Color;
 
 
 class QrCodeController extends Controller
 {
     // 1. Generate multiple QR codes
+    public function showGenerateForm()
+    {
+        return view('qr.qr-generate');
+    }
+
     public function generate(Request $request)
     {
-        $count = $request->input('count', 10); // default 10 if not passed
+        $count = $request->input('count', 10);
 
         for ($i = 0; $i < $count; $i++) {
-            // Generate unique 6-digit UID
             do {
                 $uid = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
             } while (QrCode::where('uid', $uid)->exists());
 
-            // Generate random 4-digit PIN
             $pin = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
 
             QrCode::create([
@@ -39,6 +39,7 @@ class QrCodeController extends Controller
 
         return redirect()->route('qr.list')->with('success', "$count QR codes generated!");
     }
+
 
 
     // 2. Show list of QR codes
@@ -69,7 +70,7 @@ class QrCodeController extends Controller
             'pin' => 'required|string|digits:4',
         ]);
 
-        // ✅ Find QR by UID & PIN instead of qr_code_id
+        //  Find QR by UID & PIN instead of qr_code_id
         $qr = QrCode::where('uid', $request->uid)
             ->where('pin', $request->pin)
             ->first();
