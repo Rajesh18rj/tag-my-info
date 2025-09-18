@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\QrCode;
 use App\Models\QrCodeDetail;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode as QrCodeGenerator;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\Color\Color;
+
 
 class QrCodeController extends Controller
 {
@@ -57,9 +64,7 @@ class QrCodeController extends Controller
     public function storeForm(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'description' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
             'uid' => 'required|string|digits:6',
             'pin' => 'required|string|digits:4',
         ]);
@@ -80,8 +85,6 @@ class QrCodeController extends Controller
         QrCodeDetail::create([
             'qr_code_id' => $qr->id,
             'name' => $request->name,
-            'email' => $request->email,
-            'description' => $request->description,
         ]);
 
         $qr->update(['status' => true]);
@@ -99,5 +102,32 @@ class QrCodeController extends Controller
         }
         return view('qr.qr-details', compact('qr'));
     }
+
+    public function download($id)
+    {
+        $qr = QrCode::findOrFail($id);
+
+        // Instead of raw data, encode a URL pointing to your details page
+        $data = url('/qr-details/' . $qr->id); // The page that will show details
+
+        // Optional: label below QR
+        $labelText = "UID: {$qr->uid} | PIN: {$qr->pin}";
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($data)     // this is the URL
+            ->size(300)
+            ->margin(10)
+            ->labelText($labelText)
+            ->build();
+
+        $filename = "{$qr->code}.png";
+
+        return response($result->getString(), 200, [
+            'Content-Type' => $result->getMimeType(),
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ]);
+    }
+
 
 }

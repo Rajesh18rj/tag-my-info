@@ -19,6 +19,10 @@
                     <x-nav-link :href="route('profiles.index')" :active="request()->routeIs('profiles.*')">
                         {{ __('Manage Profiles') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('qr.list')" :active="request()->routeIs('qr.*')">
+                        {{ __('Manage QR') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -80,6 +84,12 @@
         <div class="pt-1 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('profiles.index')" :active="request()->routeIs('profiles.*')">
                 {{ __('Manage Profiles') }}
+            </x-responsive-nav-link>
+        </div>
+
+        <div class="pt-1 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('qr.list')" :active="request()->routeIs('qr.*')">
+                {{ __('Manage QR') }}
             </x-responsive-nav-link>
         </div>
 

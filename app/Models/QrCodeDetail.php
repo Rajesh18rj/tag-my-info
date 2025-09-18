@@ -12,4 +12,9 @@ class QrCodeDetail extends Model
     {
         return $this->belongsTo(QrCode::class);
     }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
 }

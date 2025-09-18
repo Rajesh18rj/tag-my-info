@@ -7,6 +7,7 @@ use App\Http\Controllers\InstructionsController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\PetOwnerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileQrController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\VetDetailsController;
@@ -66,16 +67,20 @@ Route::middleware('auth')->group(function () {
     Route::resource('profiles.vet-details', VetDetailsController::class)->only(['store', 'update', 'destroy']);
     // Instruction CRUD
     Route::resource('profiles.instructions', InstructionsController::class)->only(['store', 'update', 'destroy']);
-});
 
-//----------Routes for Pop-up Modals----------//
+    //----------Routes for Pop-up Modals----------//
     Route::get('/qr-generate', [QrCodeController::class, 'generate'])->name('qr.generate');
     Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
     Route::get('/qr-form', [QrCodeController::class, 'showForm'])->name('qr.form');
     Route::post('/qr-form', [QrCodeController::class, 'storeForm'])->name('qr.store');
 
-    Route::get('/qr-details/{id}', [QrCodeController::class, 'showDetails'])->name('qr.details');
+    Route::get('/qr/{id}/download', [QrCodeController::class, 'download'])->name('qr.download');
 
+    Route::get('/profiles/{profile}/link-qr', [ProfileQrController::class, 'create'])->name('profiles.link-qr');
+    Route::post('/profiles/{profile}/link-qr', [ProfileQrController::class, 'store'])->name('profiles.link-qr.store');
 
+});
+
+Route::get('/qr-details/{id}', [QrCodeController::class, 'showDetails'])->name('qr.details');
 
 require __DIR__.'/auth.php';

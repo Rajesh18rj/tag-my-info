@@ -7,6 +7,17 @@
         {{ $profile->exists ? 'Edit Profile' : 'Create New Profile' }}
     </h1>
 
+    @if($profile->exists)
+        <div class="mb-6">
+            <a href="{{ route('profiles.link-qr', $profile->id) }}"
+               class="inline-flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-lg text-white font-semibold shadow hover:bg-blue-700 transition">
+                <i class="fas fa-link"></i>
+                <span>Link to QR</span>
+            </a>
+        </div>
+    @endif
+
+
     <form action="{{ $profile->exists ? route('profiles.update', $profile) : route('profiles.store') }}" method="POST" class="space-y-6 max-w-3xl " id="profileForm">
         @csrf
         @if($profile->exists)
