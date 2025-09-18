@@ -17,6 +17,13 @@ return new class extends Migration
             $table->string('uid', 6)->unique();
             $table->string('pin', 4);
             $table->boolean('status')->default(false);
+
+            // profile type restriction
+            $table->enum('profile_type', ['Human', 'Pet', 'Valuables'])->default('Human');
+
+            // optional: link QR to profile
+            $table->foreignId('profile_id')->nullable()->constrained()->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

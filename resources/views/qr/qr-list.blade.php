@@ -22,12 +22,13 @@
             Generate QR Codes
         </a>
         </div>
-        
+
         <div class="overflow-x-auto rounded shadow">
             <table class="w-full border-collapse bg-white rounded-lg overflow-hidden text-gray-700">
                 <thead>
                 <tr class="bg-gray-200 text-gray-900">
                     <th class="py-3 px-4 text-left">ID</th>
+                    <th class="py-3 px-4 text-left">QR Type</th>
                     <th class="py-3 px-4 text-left">UID</th>
                     <th class="py-3 px-4 text-left">PIN</th>
                     <th class="py-3 px-4 text-left">Code</th>
@@ -41,6 +42,17 @@
                 @foreach($qrcodes as $qr)
                     <tr class="border-b hover:bg-red-50 transition">
                         <td class="py-2 px-4">{{ $qr->id }}</td>
+                        <td class="py-2 px-4 font-mono text-sm">
+                            <span @class([
+                                'px-2 py-1 rounded text-black',
+                                'bg-green-100' => $qr->profile_type === 'Human',
+                                'bg-orange-100' => $qr->profile_type === 'Pet',
+                                'bg-blue-100' => $qr->profile_type === 'Valuables',
+                            ])>
+                                {{ $qr->profile_type }}
+                            </span>
+                        </td>
+
                         <td class="py-2 px-4 font-mono text-sm">{{ $qr->uid }}</td>
                         <td class="py-2 px-4 font-mono text-sm">{{ $qr->pin }}</td>
                         <td class="py-2 px-4">{{ $qr->code }}</td>
@@ -75,6 +87,10 @@
                 @endforeach
                 </tbody>
             </table>
+
+            <div class="mt-4">
+                {{ $qrcodes->links() }}
+            </div>
         </div>
     </div>
 @endsection

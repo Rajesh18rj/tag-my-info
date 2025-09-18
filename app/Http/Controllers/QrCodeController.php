@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
 use App\Models\QrCode;
 use App\Models\QrCodeDetail;
 use Illuminate\Http\Request;
@@ -12,7 +13,13 @@ use Endroid\QrCode\Writer\PngWriter;
 
 class QrCodeController extends Controller
 {
-    // 1. Generate multiple QR codes
+
+    public function index()
+    {
+        $qrcodes = QrCode::orderBy('id', 'desc')->paginate(20);
+        return view('qr.qr-list', compact('qrcodes'));
+    }
+
     public function showGenerateForm()
     {
         return view('qr.qr-generate');
@@ -20,7 +27,13 @@ class QrCodeController extends Controller
 
     public function generate(Request $request)
     {
-        $count = $request->input('count', 10);
+        $request->validate([
+            'count' => 'required|integer|min:1|max:1000',
+            'profile_type' => 'required|in:Human,Pet,Valuables',
+        ]);
+
+        $count = $request->count;
+        $profileType = $request->profile_type;
 
         for ($i = 0; $i < $count; $i++) {
             do {
@@ -30,14 +43,15 @@ class QrCodeController extends Controller
             $pin = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
 
             QrCode::create([
-                'code'   => uniqid('qr_'),
-                'uid'    => $uid,
-                'pin'    => $pin,
-                'status' => false,
+                'code'         => uniqid('qr_'),
+                'uid'          => $uid,
+                'pin'          => $pin,
+                'status'       => false,
+                'profile_type' => $profileType,
             ]);
         }
 
-        return redirect()->route('qr.list')->with('success', "$count QR codes generated!");
+        return redirect()->route('qr.list')->with('success', "$count $profileType QR codes generated!");
     }
 
 

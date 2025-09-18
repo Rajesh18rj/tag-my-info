@@ -6,6 +6,8 @@
 
         <form action="{{ route('qr.generate') }}" method="POST">
             @csrf
+
+            <!-- Count Input -->
             <div class="mb-4">
                 <label for="count" class="block text-gray-700 font-medium mb-2">
                     How many QR codes to generate?
@@ -13,6 +15,19 @@
                 <input type="number" name="count" id="count"
                        value="10" min="1" max="1000"
                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring">
+            </div>
+
+            <!-- Profile Type Dropdown -->
+            <div class="mb-4">
+                <label for="profile_type" class="block text-gray-700 font-medium mb-2">
+                    Profile Type
+                </label>
+                <select name="profile_type" id="profile_type"
+                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring">
+                    <option value="Human">Human</option>
+                    <option value="Pet">Pet</option>
+                    <option value="Valuables">Valuables</option>
+                </select>
             </div>
 
             <button type="submit"

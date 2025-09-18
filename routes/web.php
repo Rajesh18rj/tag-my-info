@@ -71,8 +71,9 @@ Route::middleware('auth')->group(function () {
     //----------Routes for Pop-up Modals----------//
     Route::get('/qr-generate', [QrCodeController::class, 'showGenerateForm'])->name('qr.showGenerateForm');
     Route::post('/qr-generate', [QrCodeController::class, 'generate'])->name('qr.generate');
+    Route::get('/qr-list', [QrCodeController::class, 'index'])->name('qr.list');
 
-    Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
+//    Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
     Route::get('/qr-form', [QrCodeController::class, 'showForm'])->name('qr.form');
     Route::post('/qr-form', [QrCodeController::class, 'storeForm'])->name('qr.store');
 
