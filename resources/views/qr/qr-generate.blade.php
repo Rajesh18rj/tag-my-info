@@ -36,4 +36,6 @@
             </button>
         </form>
     </div>
+
+{{--    @include('qr.qr-generate-list')--}}
 @endsection

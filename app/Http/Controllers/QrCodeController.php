@@ -17,7 +17,7 @@ class QrCodeController extends Controller
     public function index()
     {
         $qrcodes = QrCode::orderBy('id', 'desc')
-            ->paginate(15);
+            ->paginate(10);
         return view('qr.qr-list', compact('qrcodes'));
     }
 
@@ -153,7 +153,7 @@ class QrCodeController extends Controller
             $query->where('profile_type', $type);
         })
             ->orderBy('id', 'desc')
-            ->paginate(20)
+            ->paginate(10)
             ->withQueryString();
 
         //  Always return JSON if it's an AJAX request
