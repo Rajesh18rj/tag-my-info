@@ -89,7 +89,7 @@
         @include('profiles.modals.health-insurance')
     @endif
 
-    <!-- For Vital Medical Condition Pop-up -->
+    <!-- For Vet Details Pop-up -->
     @if($profile->id && ($profile->type == 'Pet'))
         @include('profiles.modals.vet-details')
     @endif
@@ -97,6 +97,11 @@
     <!-- For Vital Medical Condition Pop-up -->
     @if($profile->id && ($profile->type == 'Pet'))
         @include('profiles.modals.instruction')
+    @endif
+
+    <!-- For Vital Medical Condition Pop-up -->
+    @if($profile->id && ($profile->type == 'Human'))
+        @include('profiles.modals.vital-medical-condition')
     @endif
 
 @endsection

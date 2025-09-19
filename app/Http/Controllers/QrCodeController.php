@@ -55,7 +55,6 @@ class QrCodeController extends Controller
     }
 
 
-
     // 2. Show list of QR codes
     public function list()
     {
@@ -142,6 +141,21 @@ class QrCodeController extends Controller
             'Content-Type' => $result->getMimeType(),
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ]);
+    }
+
+    public function filter(Request $request)
+    {
+        $type = $request->type;
+        $qrcodes = QrCode::when($type, function ($query) use ($type) {
+            $query->where('profile_type', $type);
+        })->orderBy('id', 'desc')->paginate(20);
+
+        // If it's an AJAX request, return partial view
+        if ($request->ajax()) {
+            return view('qr.qr-list-rows', compact('qrcodes'))->render();
+        }
+
+        return view('qr.qr-list', compact('qrcodes'));
     }
 
 

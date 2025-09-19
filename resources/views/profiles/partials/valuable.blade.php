@@ -16,6 +16,11 @@
                        class="w-full border border-gray-300 rounded-md px-3 py-2" />
             </div>
             <div>
+                <label for="alternate_number_valuables" class="block font-medium mb-1">Alt Number</label>
+                <input type="text" name="valuables_alternate_number" id="alternate_number_valuables" value="{{ old('valuables_alternate_number', $profile->alternate_number) }}"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2" />
+            </div>
+            <div>
                 <label for="email_valuables" class="block font-medium mb-1">Email</label>
                 <input type="email" name="valuables_email" id="email_valuables" value="{{ old('valuables_email', $profile->email) }}"
                        class="w-full border border-gray-300 rounded-md px-3 py-2" />

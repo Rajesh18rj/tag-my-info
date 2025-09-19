@@ -2,7 +2,15 @@
 
 @section('content')
     <div class="max-w-7xl mx-auto py-8 px-4">
-        <h2 class="text-2xl font-semibold mb-6 text-red-600">All QR Codes</h2>
+        <div class="flex items-center mb-8 border-b pb-4">
+            <span class="bg-red-100 text-red-600 rounded-xl p-3 mr-4 shadow-sm">
+                <i class="fa fa-qrcode text-2xl"></i>
+            </span>
+            <h2 class="text-3xl font-bold text-gray-800 tracking-wide">
+                All <span class="text-red-600">QR Codes</span>
+            </h2>
+        </div>
+
 
         @if(session('success'))
             <div class="mb-4 p-3 rounded bg-green-50 text-green-700 border border-green-200">
@@ -15,82 +23,84 @@
             </div>
         @endif
 
-        <!-- Generate QR Code Button -->
-        <div class="mt-4 mb-10">
-        <a href="{{ route('qr.showGenerateForm') }}"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold shadow">
-            Generate QR Codes
-        </a>
+        <div class="flex justify-between">
+            <!-- Generate QR Code Button -->
+            <div class="mt-4 mb-10">
+                <a href="{{ route('qr.showGenerateForm') }}"
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
+                    <i class="fas fa-cog"></i> Generate QR Codes
+                </a>
+            </div>
+
+
+            <div class="mb-4 flex items-center gap-4">
+                <label for="typeFilter" class="font-semibold">Filter by QR Type:</label>
+                <select id="typeFilter"
+                        class="border border-gray-300 rounded px-8 py-2 pl-2 text-gray-700 focus:border-red-600 focus:ring-2 focus:ring-red-600 focus:outline-none bg-white font-semibold">
+                    <option value="" class="bg-white hover:bg-red-600 hover:text-white">All</option>
+                    <option value="Human" class="bg-white hover:bg-red-600 hover:text-white">Human</option>
+                    <option value="Pet" class="bg-white hover:bg-red-600 hover:text-white">Pet</option>
+                    <option value="Valuables" class="bg-white hover:bg-red-600 hover:text-white">Valuables</option>
+                </select>
+            </div>
+
         </div>
 
-        <div class="overflow-x-auto rounded shadow">
-            <table class="w-full border-collapse bg-white rounded-lg overflow-hidden text-gray-700">
+        <div class="overflow-x-auto rounded-lg shadow">
+            <table class="min-w-full border-collapse bg-white rounded-lg text-gray-700">
                 <thead>
-                <tr class="bg-gray-200 text-gray-900">
-                    <th class="py-3 px-4 text-left">ID</th>
-                    <th class="py-3 px-4 text-left">QR Type</th>
-                    <th class="py-3 px-4 text-left">UID</th>
-                    <th class="py-3 px-4 text-left">PIN</th>
-                    <th class="py-3 px-4 text-left">Code</th>
-                    <th class="py-3 px-4 text-left">Code Image</th>
-                    <th class="py-3 px-4 text-left">Status</th>
-                    <th class="py-3 px-4 text-left">Details</th>
-                    <th class="py-3 px-4 text-left">Download</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($qrcodes as $qr)
-                    <tr class="border-b hover:bg-red-50 transition">
-                        <td class="py-2 px-4">{{ $qr->id }}</td>
-                        <td class="py-2 px-4 font-mono text-sm">
-                            <span @class([
-                                'px-2 py-1 rounded text-black',
-                                'bg-green-100' => $qr->profile_type === 'Human',
-                                'bg-orange-100' => $qr->profile_type === 'Pet',
-                                'bg-blue-100' => $qr->profile_type === 'Valuables',
-                            ])>
-                                {{ $qr->profile_type }}
-                            </span>
-                        </td>
-
-                        <td class="py-2 px-4 font-mono text-sm">{{ $qr->uid }}</td>
-                        <td class="py-2 px-4 font-mono text-sm">{{ $qr->pin }}</td>
-                        <td class="py-2 px-4">{{ $qr->code }}</td>
-                        <td class="py-2 px-4">
-                            <div class="flex justify-center items-center">
-                                {!! QrCode::size(90)->generate(url('/qr-details/' . $qr->id)) !!}
-                            </div>
-                        </td>
-                        <td class="py-2 px-4">
-                            @if($qr->status)
-                                <span class="inline-block px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">Used</span>
-                            @else
-                                <span class="inline-block px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-xs font-semibold">Free</span>
-                            @endif
-                        </td>
-                        <td class="py-2 px-4">
-                            @if($qr->detail)
-                                <span title="{{ $qr->detail->email }}">
-                                    {{ $qr->detail->name }} <span class="text-gray-400">({{ $qr->detail->email }})</span>
-                                </span>
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
-                        <td class="py-2 px-4">
-                            <a href="{{ route('qr.download', $qr->id) }}"
-                               class="text-red-600 hover:underline hover:text-red-800 font-medium">
-                                Download
-                            </a>
-                        </td>
+                    <tr class="bg-gray-200 text-gray-900">
+                        <th class="py-3 px-4 text-left">ID</th>
+                        <th class="py-3 px-4 text-left">QR Type</th>
+                        <th class="py-3 px-4 text-left">UID</th>
+                        <th class="py-3 px-4 text-left">PIN</th>
+                        <th class="py-3 px-4 text-left">Code</th>
+                        <th class="py-3 px-4 text-left">Code Image</th>
+                        <th class="py-3 px-4 text-left">Status</th>
+                        <th class="py-3 px-4 text-left">Details</th>
+                        <th class="py-3 px-4 text-left">Download</th>
                     </tr>
-                @endforeach
+                </thead>
+
+                <tbody id="qrTableBody">
+                    @include('qr.qr-list-rows', ['qrcodes' => $qrcodes])
                 </tbody>
             </table>
 
-            <div class="mt-4">
+            <div class="mt-4" id="paginationLinks">
                 {{ $qrcodes->links() }}
             </div>
         </div>
     </div>
+
+    <script>
+        const typeFilter = document.getElementById('typeFilter');
+        const tableBody = document.getElementById('qrTableBody');
+        const paginationLinks = document.getElementById('paginationLinks');
+
+        function fetchQRCodes(url = null) {
+            const type = typeFilter.value;
+            const fetchUrl = url || `{{ route('qr.list.filter') }}?type=${type}`;
+
+            fetch(fetchUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(res => res.text())
+                .then(html => {
+                    tableBody.innerHTML = html;
+                    paginationLinks.innerHTML = '';
+                })
+                .catch(err => console.error(err));
+        }
+
+        typeFilter.addEventListener('change', () => {
+            fetchQRCodes();
+        });
+
+        // Handle pagination clicks dynamically (if implemented)
+        document.addEventListener('click', function(e) {
+            if(e.target.closest('.pagination a')) {
+                e.preventDefault();
+                fetchQRCodes(e.target.closest('a').href);
+            }
+        });
+    </script>
 @endsection

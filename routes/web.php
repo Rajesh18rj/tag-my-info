@@ -68,20 +68,23 @@ Route::middleware('auth')->group(function () {
     // Instruction CRUD
     Route::resource('profiles.instructions', InstructionsController::class)->only(['store', 'update', 'destroy']);
 
-    //----------Routes for Pop-up Modals----------//
+//----------Routes for QR ----------//
     Route::get('/qr-generate', [QrCodeController::class, 'showGenerateForm'])->name('qr.showGenerateForm');
     Route::post('/qr-generate', [QrCodeController::class, 'generate'])->name('qr.generate');
     Route::get('/qr-list', [QrCodeController::class, 'index'])->name('qr.list');
 
-//    Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
+    //Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
     Route::get('/qr-form', [QrCodeController::class, 'showForm'])->name('qr.form');
     Route::post('/qr-form', [QrCodeController::class, 'storeForm'])->name('qr.store');
 
+    // QR Download
     Route::get('/qr/{id}/download', [QrCodeController::class, 'download'])->name('qr.download');
 
     Route::get('/profiles/{profile}/link-qr', [ProfileQrController::class, 'create'])->name('profiles.link-qr');
     Route::post('/profiles/{profile}/link-qr', [ProfileQrController::class, 'store'])->name('profiles.link-qr.store');
 
+    // AJAX route for QR code filtering with optional pagination
+    Route::get('/qr-list/filter', [QrCodeController::class, 'filter'])->name('qr.list.filter');
 });
 
 Route::get('/qr-details/{id}', [QrCodeController::class, 'showDetails'])->name('qr.details');

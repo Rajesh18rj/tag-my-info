@@ -15,12 +15,12 @@ class ProfileQrController extends Controller
         return view('profiles.link-qr', compact('profile'));
     }
 
-    // Handle linking
+    //Handle Linking
     public function store(Request $request, Profile $profile)
     {
         $request->validate([
-            'uid' => 'required|string',
-            'pin' => 'required|string',
+            'uid'  => 'required|string|digits:6',
+            'pin'  => 'required|string|digits:4',
             'name' => 'nullable|string|max:255',
         ]);
 
@@ -32,7 +32,12 @@ class ProfileQrController extends Controller
             return back()->with('error', 'QR Code not found or invalid UID/PIN.');
         }
 
-        // Check if this QR already linked
+        // Check type match
+        if ($qr->profile_type !== $profile->type) {
+            return back()->with('error', "Type mismatch! This QR is for {$qr->profile_type} profiles, but this profile is {$profile->type}.");
+        }
+
+        // Check if this QR is already linked
         if ($qr->detail) {
             return back()->with('error', 'This QR is already linked to another profile.');
         }
@@ -40,7 +45,7 @@ class ProfileQrController extends Controller
         QrCodeDetail::create([
             'qr_code_id' => $qr->id,
             'profile_id' => $profile->id,
-            'name' => $request->name,
+            'name'       => $request->name,
         ]);
 
         $qr->status = 1; // mark as used
@@ -49,4 +54,5 @@ class ProfileQrController extends Controller
         return redirect()->route('profiles.edit', $profile->id)
             ->with('success', 'QR Code linked successfully!');
     }
+
 }
