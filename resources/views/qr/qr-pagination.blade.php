@@ -1,0 +1,3 @@
+<div>
+    {{ $qrcodes->links() }}
+</div>

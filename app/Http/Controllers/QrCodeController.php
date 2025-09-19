@@ -16,7 +16,8 @@ class QrCodeController extends Controller
 
     public function index()
     {
-        $qrcodes = QrCode::orderBy('id', 'desc')->paginate(20);
+        $qrcodes = QrCode::orderBy('id', 'desc')
+            ->paginate(15);
         return view('qr.qr-list', compact('qrcodes'));
     }
 
@@ -107,6 +108,7 @@ class QrCodeController extends Controller
     }
 
 
+    // QR Details
     public function showDetails($id)
     {
         $qr = QrCode::with('detail')->findOrFail($id);
@@ -146,17 +148,23 @@ class QrCodeController extends Controller
     public function filter(Request $request)
     {
         $type = $request->type;
+
         $qrcodes = QrCode::when($type, function ($query) use ($type) {
             $query->where('profile_type', $type);
-        })->orderBy('id', 'desc')->paginate(20);
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(20)
+            ->withQueryString();
 
-        // If it's an AJAX request, return partial view
+        //  Always return JSON if it's an AJAX request
         if ($request->ajax()) {
-            return view('qr.qr-list-rows', compact('qrcodes'))->render();
+            return response()->json([
+                'rows'       => view('qr.qr-list-rows', compact('qrcodes'))->render(),
+                'pagination' => view('qr.qr-pagination', compact('qrcodes'))->render(),
+            ]);
         }
 
         return view('qr.qr-list', compact('qrcodes'));
     }
-
 
 }

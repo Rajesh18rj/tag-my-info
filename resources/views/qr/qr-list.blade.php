@@ -67,12 +67,15 @@
                 </tbody>
             </table>
 
-            <div class="mt-4" id="paginationLinks">
-                {{ $qrcodes->links() }}
-            </div>
+        </div>
+
+        {{-- Pagination --}}
+        <div class="mt-4" id="paginationLinks">
+            @include('qr.qr-pagination', ['qrcodes' => $qrcodes])
         </div>
     </div>
 
+    {{-- AJAX --}}
     <script>
         const typeFilter = document.getElementById('typeFilter');
         const tableBody = document.getElementById('qrTableBody');
@@ -80,27 +83,44 @@
 
         function fetchQRCodes(url = null) {
             const type = typeFilter.value;
-            const fetchUrl = url || `{{ route('qr.list.filter') }}?type=${type}`;
+            const fetchUrl = url || `{{ route('qr.list.filter') }}?type=${encodeURIComponent(type)}`;
 
-            fetch(fetchUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                .then(res => res.text())
-                .then(html => {
-                    tableBody.innerHTML = html;
-                    paginationLinks.innerHTML = '';
+            fetch(fetchUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(res => res.json()) // now safe because backend always sends JSON
+                .then(data => {
+                    tableBody.innerHTML = data.rows;
+                    paginationLinks.innerHTML = data.pagination;
+
+                    // Update browser URL
+                    window.history.pushState({}, '', fetchUrl);
                 })
-                .catch(err => console.error(err));
+                .catch(err => console.error("Fetch error:", err));
         }
 
+        // On filter change
         typeFilter.addEventListener('change', () => {
             fetchQRCodes();
         });
 
-        // Handle pagination clicks dynamically (if implemented)
+        // On pagination click
         document.addEventListener('click', function(e) {
-            if(e.target.closest('.pagination a')) {
+            const a = e.target.closest('#paginationLinks a');
+            if (a) {
                 e.preventDefault();
-                fetchQRCodes(e.target.closest('a').href);
+                fetchQRCodes(a.href);
             }
         });
+
+        // Back/forward button support
+        window.addEventListener('popstate', function() {
+            fetchQRCodes(window.location.href);
+        });
     </script>
+
+
 @endsection
