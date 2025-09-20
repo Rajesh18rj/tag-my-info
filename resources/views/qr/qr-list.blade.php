@@ -32,7 +32,7 @@
                 </a>
             </div>
 
-
+            <!--Filter--->
             <div class="mb-4 flex items-center gap-4">
                 <label for="typeFilter" class="font-semibold">Filter by QR Type:</label>
                 <select id="typeFilter"
@@ -58,7 +58,8 @@
                         <th class="py-3 px-4 text-left">Code Image</th>
                         <th class="py-3 px-4 text-left">Status</th>
                         <th class="py-3 px-4 text-left">Details</th>
-                        <th class="py-3 px-4 text-left">Download</th>
+                        <th class="py-3 px-4 text-center">Actions</th>
+{{--                        <th class="py-3 px-4 text-left">Download</th>--}}
                     </tr>
                 </thead>
 

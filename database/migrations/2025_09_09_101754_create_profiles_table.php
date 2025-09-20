@@ -34,6 +34,8 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('alternate_number')->nullable();
             $table->text('notes')->nullable();
+            $table->string('profile_image')->nullable();
+            $table->boolean('is_public')->default(true); // show/hide profile
             $table->timestamps();
         });
     }

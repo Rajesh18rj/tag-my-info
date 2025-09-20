@@ -8,6 +8,10 @@ class QrCode extends Model
 {
     protected $guarded = [];
 
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
     public function detail()
     {
         return $this->hasOne(QrCodeDetail::class);
@@ -16,6 +20,6 @@ class QrCode extends Model
     // Relationship with qr_code_details
     public function details()
     {
-        return $this->hasOne(QrCodeDetail::class, 'qr_code_id');
+        return $this->hasMany(QrCodeDetail::class);
     }
 }

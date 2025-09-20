@@ -74,9 +74,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/qr-list', [QrCodeController::class, 'index'])->name('qr.list');
 
 
-
 //    Route::get('qr/download/{filename}', [QrCodeController::class, 'qrDownload'])->name('qr.qrDownload');
-
 
     //Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
     Route::get('/qr-form', [QrCodeController::class, 'showForm'])->name('qr.form');

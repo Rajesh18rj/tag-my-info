@@ -10,14 +10,13 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode as QrCodeGenerator;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 
-
 class QrCodeController extends Controller
 {
 
     public function index()
     {
         $qrcodes = QrCode::orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(15);
         return view('qr.qr-list', compact('qrcodes'));
     }
 
@@ -109,15 +108,35 @@ class QrCodeController extends Controller
 
 
     // QR Details
+//    public function showDetails($id)
+//    {
+//        $qr = QrCode::with('detail')->findOrFail($id);
+//
+//        if (!$qr->status) {
+//            return "No details mapped yet for this QR Code.";
+//        }
+//        return view('qr.qr-details', compact('qr'));
+//    }
+
     public function showDetails($id)
     {
-        $qr = QrCode::with('detail')->findOrFail($id);
+        // Find the QR code
+        $qr = QrCode::findOrFail($id);
 
-        if (!$qr->status) {
-            return "No details mapped yet for this QR Code.";
+        // Load all QR details with profiles linked to this QR
+        $qrDetails = QrCodeDetail::with('profile')
+            ->where('qr_code_id', $id)
+            ->get();
+
+        if ($qrDetails->isEmpty()) {
+            return "No profiles mapped yet for this QR Code.";
         }
-        return view('qr.qr-details', compact('qr'));
+
+        return view('qr.qr-details', compact('qr', 'qrDetails'));
     }
+
+
+
 
     public function download($id)
     {
@@ -153,7 +172,7 @@ class QrCodeController extends Controller
             $query->where('profile_type', $type);
         })
             ->orderBy('id', 'desc')
-            ->paginate(10)
+            ->paginate(15)
             ->withQueryString();
 
         //  Always return JSON if it's an AJAX request

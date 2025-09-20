@@ -175,7 +175,7 @@ class ProfilesController extends Controller
                 $data['notes'] = $data['valuables_notes'] ?? null;
                 $data['alternate_number'] = $data['valuables_alternate_number'] ?? null;
                 foreach ([
-                             'valuables_first_name', 'valuables_personal_number', 'valuables_email', 'valuables_notes', 'valuable_alternate_number',
+                             'valuables_first_name', 'valuables_personal_number', 'valuables_email', 'valuables_notes', 'valuables_alternate_number',
                          ] as $key) {
                     unset($data[$key]);
                 }

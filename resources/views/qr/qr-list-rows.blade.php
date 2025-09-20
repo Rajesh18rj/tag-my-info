@@ -26,18 +26,30 @@
         </td>
         <td class="py-2 px-4">
             @if($qr->detail)
-                <span title="{{ $qr->detail->email }}">
-                {{ $qr->detail->name }} <span class="text-gray-400">({{ $qr->detail->email }})</span>
-            </span>
+{{--                <span title="{{ $qr->detail->email }}">--}}
+                {{ $qr->detail->name }}
+{{--<span class="text-gray-400">({{ $qr->detail->email }})</span>--}}
+{{--            </span>--}}
             @else
                 <span class="text-gray-400">-</span>
             @endif
         </td>
-        <td class="py-2 px-4">
+
+        <td class="py-0 px-6 flex items-center gap-6">
+            <!-- View Icon -->
+            <a href="{{ route('qr.details', $qr->id) }}"
+               class="text-blue-600 hover:text-blue-800 relative top-[-36px]">
+                <i class="fa fa-eye"></i>
+            </a>
+
+            <!-- Download Icon -->
             <a href="{{ route('qr.download', $qr->id) }}"
-               class="text-red-600 hover:underline hover:text-red-800 font-medium">
-                Download
+               class="text-red-600 hover:text-red-800 relative top-[-36px]">
+                <i class="fa fa-download"></i>
             </a>
         </td>
+
+
+
     </tr>
 @endforeach
