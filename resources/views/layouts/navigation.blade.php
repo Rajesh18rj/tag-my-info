@@ -20,9 +20,11 @@
                         {{ __('Manage Profiles') }}
                     </x-nav-link>
 
+                    @if(auth()->check() && auth()->user()->user_role === 'admin')
                     <x-nav-link :href="route('qr.list')" :active="request()->routeIs('qr.*')">
                         {{ __('Manage QR') }}
                     </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -87,11 +89,13 @@
             </x-responsive-nav-link>
         </div>
 
+        @if(auth()->check() && auth()->user()->user_role === 'admin')
         <div class="pt-1 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('qr.list')" :active="request()->routeIs('qr.*')">
                 {{ __('Manage QR') }}
             </x-responsive-nav-link>
         </div>
+        @endif
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

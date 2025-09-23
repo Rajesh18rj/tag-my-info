@@ -30,7 +30,7 @@
             <img src="{{ Storage::url($qrDetails[0]->profile->profile_image) }}" alt="Profile Image"
                  class="h-24 w-24 object-cover rounded-full border-4 border-red-300 shadow-md">
         @else
-            <img src="{{ asset('images/Screenshot-2025-09-20-172210.jpg') }}" alt="Default Profile Image"
+            <img src="{{ asset('images/empty.jpg') }}" alt="Default Profile Image"
                  class="h-24 w-24 object-cover rounded-full border-4 border-gray-300 shadow-md">
         @endif
     </div>

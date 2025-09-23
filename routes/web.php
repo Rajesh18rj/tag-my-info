@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
     // Delete a profile
         Route::delete('/profiles/{profile}', [ProfilesController::class, 'destroy'])->name('profiles.destroy');
 
-    // Toggle
+    // Toggle Bar
     Route::post('/profiles/{profile}/toggle-public', [ProfilesController::class, 'togglePublic'])
         ->name('profiles.toggle-public');
 
