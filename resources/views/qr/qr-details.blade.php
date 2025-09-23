@@ -26,13 +26,15 @@
 
     <!-- Profile Image (optional) -->
     <div class="flex items-center justify-center pt-4 pb-2">
-        @isset($qrDetails[0]->profile->image)
-            <img src="{{ asset($qrDetails[0]->profile->image) }}" alt="Profile Image"
+        @if(!empty($qrDetails[0]->profile->profile_image))
+            <img src="{{ Storage::url($qrDetails[0]->profile->profile_image) }}" alt="Profile Image"
                  class="h-24 w-24 object-cover rounded-full border-4 border-red-300 shadow-md">
         @else
-            <div class="h-24 w-24 flex items-center justify-center rounded-full bg-gray-200 border-4 border-gray-300 text-gray-400 font-bold">IMG</div>
-        @endisset
+            <img src="{{ asset('images/Screenshot-2025-09-20-172210.jpg') }}" alt="Default Profile Image"
+                 class="h-24 w-24 object-cover rounded-full border-4 border-gray-300 shadow-md">
+        @endif
     </div>
+
 
     <!-- Profile Details as clean fields -->
     <div class="px-8 py-4">

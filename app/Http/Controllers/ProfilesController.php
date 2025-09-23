@@ -25,6 +25,11 @@ class ProfilesController extends Controller
     {
         $data = $this->validateProfile($request);
 
+        // Handle profile image upload
+        if ($request->hasFile('profile_image')) {
+            $data['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+        }
+
         // Map unique input names to common model fields based on profile type
         switch ($data['type']) {
             case 'Human':
@@ -97,7 +102,7 @@ class ProfilesController extends Controller
                 break;
         }
 
-        $data['user_id'] = auth()->id(); // Adjust if needed
+        $data['user_id'] = auth()->id();
 
         $profile = Profile::create($data);
 
@@ -112,6 +117,11 @@ class ProfilesController extends Controller
     public function update(Request $request, Profile $profile)
     {
         $data = $this->validateProfile($request);
+
+        // Handle profile image update
+        if ($request->hasFile('profile_image')) {
+            $data['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+        }
 
         switch ($data['type']) {
             case 'Human':
@@ -197,6 +207,8 @@ class ProfilesController extends Controller
     {
         $rules = [
             'type' => ['required', Rule::in(['Human', 'Pet', 'Valuables'])],
+            'profile_image' => ['nullable', 'image', 'max:2048'], // <--- validate profile image
+
         ];
 
         switch ($request->type) {
