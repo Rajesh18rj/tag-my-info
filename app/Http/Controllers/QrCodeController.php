@@ -108,16 +108,6 @@ class QrCodeController extends Controller
 
 
     // QR Details
-//    public function showDetails($id)
-//    {
-//        $qr = QrCode::with('detail')->findOrFail($id);
-//
-//        if (!$qr->status) {
-//            return "No details mapped yet for this QR Code.";
-//        }
-//        return view('qr.qr-details', compact('qr'));
-//    }
-
     public function showDetails($id)
     {
         // Find the QR code
@@ -134,8 +124,6 @@ class QrCodeController extends Controller
 
         return view('qr.qr-details', compact('qr', 'qrDetails'));
     }
-
-
 
 
     public function download($id)
