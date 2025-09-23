@@ -8,12 +8,22 @@
     </h1>
 
     @if($profile->exists)
-        <div class="mb-6">
+        <div class="mb-6 flex justify-between max-w-3xl ">
             <a href="{{ route('profiles.link-qr', $profile->id) }}"
                class="inline-flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-lg text-white font-semibold shadow hover:bg-blue-700 transition">
                 <i class="fas fa-link"></i>
                 <span>Link to QR</span>
             </a>
+
+            <!-- Public Toggle Button -->
+            <button type="button"
+                    id="togglePublicBtn"
+                    data-id="{{ $profile->id }}"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold shadow transition
+                       {{ $profile->is_public ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-400 text-white hover:bg-gray-500' }}">
+                <i class="fas {{ $profile->is_public ? 'fa-eye' : 'fa-eye-slash' }}"></i>
+                <span>{{ $profile->is_public ? 'Public' : 'Private' }}</span>
+            </button>
         </div>
     @endif
 
@@ -235,6 +245,37 @@
             typeSelect.addEventListener('change', () => {
                 showFields(typeSelect.value);
             });
+        });
+    </script>
+
+    <!----- For Toggle Bar ---->
+    <script>
+        document.getElementById('togglePublicBtn')?.addEventListener('click', function () {
+            const btn = this;
+            const profileId = btn.dataset.id;
+
+            fetch(`/profiles/${profileId}/toggle-public`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.is_public) {
+                            btn.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+                            btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                            btn.innerHTML = '<i class="fas fa-eye"></i> <span>Public</span>';
+                        } else {
+                            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                            btn.classList.add('bg-gray-400', 'hover:bg-gray-500');
+                            btn.innerHTML = '<i class="fas fa-eye-slash"></i> <span>Private</span>';
+                        }
+                    }
+                })
+                .catch(err => console.error(err));
         });
     </script>
 @endsection

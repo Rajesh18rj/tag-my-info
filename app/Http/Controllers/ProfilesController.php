@@ -268,5 +268,17 @@ class ProfilesController extends Controller
         return $request->validate($rules);
     }
 
+    // Toggle for Profile Availability
+    public function togglePublic(Profile $profile)
+    {
+        $profile->is_public = !$profile->is_public;
+        $profile->save();
+
+        return response()->json([
+            'success' => true,
+            'is_public' => $profile->is_public,
+        ]);
+    }
+
 
 }

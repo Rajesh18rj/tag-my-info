@@ -122,6 +122,21 @@ class QrCodeController extends Controller
             return "No profiles mapped yet for this QR Code.";
         }
 
+        //  Check if all linked profiles are private
+        $hasPublicProfile = $qrDetails->contains(function ($detail) {
+            return $detail->profile && $detail->profile->is_public;
+        });
+
+        if (! $hasPublicProfile) {
+            return response()->view('profiles.private-profile', compact('qr'), 403);
+//             return "This profile is private.";
+        }
+
+        // If at least one profile is public, filter only public ones
+        $qrDetails = $qrDetails->filter(function ($detail) {
+            return $detail->profile && $detail->profile->is_public;
+        });
+
         return view('qr.qr-details', compact('qr', 'qrDetails'));
     }
 

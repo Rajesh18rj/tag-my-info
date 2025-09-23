@@ -50,6 +50,10 @@ Route::middleware('auth')->group(function () {
     // Delete a profile
         Route::delete('/profiles/{profile}', [ProfilesController::class, 'destroy'])->name('profiles.destroy');
 
+    // Toggle
+    Route::post('/profiles/{profile}/toggle-public', [ProfilesController::class, 'togglePublic'])
+        ->name('profiles.toggle-public');
+
 //----------Routes for Pop-up Modals----------//
     // EmergencyContact CRUD
     Route::resource('profiles.emergency-contacts', EmergencyContactController::class)->only(['store', 'update', 'destroy']);
