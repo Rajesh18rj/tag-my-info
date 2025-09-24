@@ -27,7 +27,7 @@
             <!-- Generate QR Code Button -->
             <div class="mt-4 mb-10">
 {{--                <a href="{{ route('qr.showGenerateForm') }}"--}}
-                <a href="{{ route('qr-batches.index') }}"
+                <a href="{{ route('qr.qr-batches.index') }}"
 
                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
                     <i class="fas fa-cog"></i> Generate QR Codes

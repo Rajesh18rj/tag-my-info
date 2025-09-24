@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('qr_batches', function (Blueprint $table) {
             $table->id();
             $table->integer('count'); // how many QRs in this batch
+            $table->boolean('is_downloaded')->default(false);
             $table->timestamps();
         });
     }

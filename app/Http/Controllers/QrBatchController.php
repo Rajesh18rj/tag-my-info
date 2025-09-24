@@ -76,7 +76,12 @@ class QrBatchController extends Controller
             $zip->close();
         }
 
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        // Mark the batch as downloaded
+        $batch->update(['is_downloaded' => true]);
+
+//        return response()->download($zipPath)->deleteFileAfterSend(true);
+        return response()->download($zipPath);
+
     }
 
 }
