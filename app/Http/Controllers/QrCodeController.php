@@ -176,9 +176,9 @@ class QrCodeController extends Controller
         })
             ->orderBy('id', 'desc')
             ->paginate(15)
-            ->withQueryString();
+            ->withQueryString(); // keeps ?type= in pagination URLs
 
-        //  Always return JSON if it's an AJAX request
+        // Always return JSON if it's an AJAX request
         if ($request->ajax()) {
             return response()->json([
                 'rows'       => view('qr.qr-list-rows', compact('qrcodes'))->render(),
@@ -186,6 +186,7 @@ class QrCodeController extends Controller
             ]);
         }
 
+        // Fallback for direct visits (not AJAX)
         return view('qr.qr-list', compact('qrcodes'));
     }
 
