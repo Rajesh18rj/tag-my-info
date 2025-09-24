@@ -76,11 +76,26 @@ class QrBatchController extends Controller
             $zip->close();
         }
 
-        // Mark the batch as downloaded
-        $batch->update(['is_downloaded' => true]);
-
 //        return response()->download($zipPath)->deleteFileAfterSend(true);
         return response()->download($zipPath);
+
+    }
+
+
+    public function updateStatus(Request $request, QrBatch $batch)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,sending,received,verified'
+        ]);
+
+        $batch->update(['status' => $request->status]);
+
+
+        return response()->json([
+            'success' => true,
+            'status'  => $batch->status,
+            'redirect' => route('qr.qr-batches.index')
+        ]);
 
     }
 

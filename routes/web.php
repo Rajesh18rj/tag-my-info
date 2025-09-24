@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/qr-batches', [QrBatchController::class, 'index'])->name('qr.qr-batches.index');
     Route::post('/qr-batches', [QrBatchController::class, 'store'])->name('qr.qr-batches.store');
     Route::get('/qr-batches/{batch}/download', [QrBatchController::class, 'download'])->name('qr.qr-batches.download');
+    Route::post('/qr-batches/{batch}/status', [QrBatchController::class, 'updateStatus'])->name('qr-batches.update-status');
 
 
     //Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
