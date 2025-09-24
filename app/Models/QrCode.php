@@ -22,4 +22,9 @@ class QrCode extends Model
     {
         return $this->hasMany(QrCodeDetail::class);
     }
+
+    public function batch()
+    {
+        return $this->belongsTo(QrBatch::class, 'batch_id');
+    }
 }

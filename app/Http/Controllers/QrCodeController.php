@@ -25,6 +25,9 @@ class QrCodeController extends Controller
         return view('qr.qr-generate');
     }
 
+
+    // Generate QR Code
+
     public function generate(Request $request)
     {
         $request->validate([
@@ -189,5 +192,6 @@ class QrCodeController extends Controller
         // Fallback for direct visits (not AJAX)
         return view('qr.qr-list', compact('qrcodes'));
     }
+
 
 }

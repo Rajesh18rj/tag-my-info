@@ -24,6 +24,9 @@ return new class extends Migration
             // optional: link QR to profile
             $table->foreignId('profile_id')->nullable()->constrained()->cascadeOnDelete();
 
+            // link to batch
+            $table->foreignId('batch_id')->nullable()->constrained('qr_batches')->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

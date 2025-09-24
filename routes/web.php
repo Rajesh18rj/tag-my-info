@@ -9,6 +9,7 @@ use App\Http\Controllers\PetOwnerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileQrController;
 use App\Http\Controllers\ProfilesController;
+use App\Http\Controllers\QrBatchController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\VetDetailsController;
 use App\Http\Controllers\VitalMedicalConditionController;
@@ -79,6 +80,13 @@ Route::middleware('auth')->group(function () {
 
 
 //    Route::get('qr/download/{filename}', [QrCodeController::class, 'qrDownload'])->name('qr.qrDownload');
+
+
+//--------- Routes for Generate QR with Batch wise -----------//
+    Route::get('/qr-batches', [QrBatchController::class, 'index'])->name('qr.qr-batches.index');
+    Route::post('/qr-batches', [QrBatchController::class, 'store'])->name('qr.qr-batches.store');
+    Route::get('/qr-batches/{batch}/download', [QrBatchController::class, 'download'])->name('qr.qr-batches.download');
+
 
     //Route::get('/qr-list', [QrCodeController::class, 'list'])->name('qr.list');
     Route::get('/qr-form', [QrCodeController::class, 'showForm'])->name('qr.form');
