@@ -17,7 +17,7 @@
     </div>
 
 
-<table class="table-auto w-full border-collapse border border-gray-300 rounded-lg overflow-hidden shadow-lg">
+    <table class="table-auto w-full border-collapse border border-gray-300 rounded-lg overflow-hidden shadow-lg">
         <thead class="bg-red-600 text-white">
         <tr>
             <th class="border border-red-700 px-4 py-2 text-center">Type</th>
@@ -39,8 +39,7 @@
                        title="Edit Profile" aria-label="Edit Profile">
                         <i class="fas fa-edit fa-lg"></i>
                     </a>
-                    <form action="{{ route('profiles.destroy', $profile) }}" method="POST"
-                          onsubmit="return confirm('Delete this profile?');" class="inline">
+                    <form action="{{ route('profiles.destroy', $profile) }}" method="POST" class="delete-profile inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
@@ -49,6 +48,7 @@
                             <i class="fas fa-trash-alt fa-lg"></i>
                         </button>
                     </form>
+
                 </td>
 
             </tr>
@@ -63,4 +63,34 @@
     <div class="mt-6">
         {{ $profiles->links() }}
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteForms = document.querySelectorAll('.delete-profile');
+
+            deleteForms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault(); // prevent default form submission
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // submit form if confirmed
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
 @endsection

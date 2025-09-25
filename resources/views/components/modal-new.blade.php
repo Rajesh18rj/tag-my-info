@@ -24,7 +24,7 @@
     </button>
 
     @if($items->count())
-        <div class="hidden sm:flex justify-between font-bold text-red-700 border-b-2 border-red-200 pb-2 mb-3 px-4">
+        <div class="hidden sm:flex justify-between font-bold text-black border-b-2 border-red-200 pb-2 mb-3 px-4">
             @foreach($fields as $field)
                 <span class="flex-1">{{ $field['label'] }}</span>
             @endforeach
@@ -52,16 +52,17 @@
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
 
-                        <form method="POST" action="{{ $baseUrl }}/{{ $item->id }}"
-                              onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <form method="POST" action="{{ $baseUrl }}/{{ $item->id }}" id="delete-form-{{ $item->id }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit"
-                                    class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition"
+                            <button type="button"
+                                    class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition delete-btn"
+                                    data-form-id="delete-form-{{ $item->id }}"
                                     title="Delete">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </form>
+
                     </div>
                 </li>
             @endforeach
@@ -150,3 +151,49 @@
         });
     })();
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show success message if present
+        @if(session('success'))
+        Swal.fire({
+            title: 'Deleted!',
+            text: '{{ session('success') }}',
+            icon: 'success',
+            confirmButtonColor: '#dc2626',
+            timer: 3000,
+            timerProgressBar: true
+        });
+        @endif
+
+        // Handle delete button clicks
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const formId = this.getAttribute('data-form-id');
+                const form = document.getElementById(formId);
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this action!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+
