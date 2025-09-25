@@ -14,7 +14,7 @@
                     <span>Created On</span>
                 </div>
             </th>
-            <th class="px-6 py-4 text-center text-sm font-bold text-gray-700 tracking-wider">
+            <th class="px-4 py-4 text-center text-sm font-bold text-gray-700 tracking-wider">
                 <div class="flex flex-col items-center space-y-1">
                     <i class="fas fa-tag text-red-500 text-base"></i>
                     <span>Profile Type</span>
@@ -44,7 +44,7 @@
         <tbody class="divide-y divide-gray-200">
         @forelse($batches as $batch)
             <tr class="hover:bg-gray-50 transition-colors duration-200">
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-2  py-4 whitespace-nowrap text-center">
                     <div class="flex items-center">
                         <div class=" rounded-full p-2 mr-3">
                         </div>
@@ -56,7 +56,7 @@
                     {{ $batch->created_at->format('M d, Y \a\t h:i A') }}
                 </td>
 
-                <td class="px-6 py-4 whitespace-nowrap text-center">
+                <td class="px-4 py-4 whitespace-nowrap text-center">
                     @php
                         $profileType = optional($batch->qrcodes->first())->profile_type ?? 'N/A';
                         $typeConfig = [
@@ -92,7 +92,7 @@
                     </div>
                 </td>
 
-                <td class="px-2 py-4 whitespace-nowrap">
+                <td class="px-0 py-4 whitespace-nowrap">
                     <div class="flex flex-col items-center space-y-2">
                         @php
                             $statusColors = [
@@ -130,7 +130,6 @@
                         </button>
                     </div>
                 </td>
-
 
             </tr>
         @empty

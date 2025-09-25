@@ -60,6 +60,22 @@
             return;
         }
 
+        // Check if count is greater than 100
+        if (count > 100) {
+            Swal.fire({
+                title: 'Invalid Count',
+                text: 'You cannot generate more than 100 QR codes at once.',
+                icon: 'error',
+                confirmButtonColor: '#ef4444',
+                customClass: {
+                    popup: 'rounded-xl shadow-2xl border-t-4 border-red-500',
+                    title: 'text-lg font-bold text-gray-800',
+                    content: 'text-gray-600'
+                }
+            });
+            return;
+        }
+
         Swal.fire({
             title: 'Generate QR Batch',
             text: `Create ${count} QR codes for ${profileType} profiles?`,

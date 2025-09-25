@@ -152,7 +152,7 @@ class QrCodeController extends Controller
         $data = url('/qr-details/' . $qr->id); // The page that will show details
 
         // Optional: label below QR
-        $labelText = "UID: {$qr->uid} | PIN: {$qr->pin}";
+        $labelText = "ID: {$qr->uid} | PIN: {$qr->pin}";
 
         $result = Builder::create()
             ->writer(new PngWriter())

@@ -30,17 +30,40 @@
     <body class="font-sans antialiased">
             @include('layouts.navigation')
 
-            <!-- Page Content -->
-            <main>
-                @if(session('success'))
-                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-sm">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                <div id="app" class="max-w-4xl mx-auto">
-                    @yield('content')
-                </div>
-            </main>
+        <!-- Page Content -->
+        <main>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    @if(session('success'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: '{{ session('success') }}',
+                        toast: true,
+                        position: 'top-right',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                    @endif
+
+                    @if(session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: '{{ session('error') }}',
+                        toast: true,
+                        position: 'top-right',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true
+                    });
+                    @endif
+                });
+            </script>
+
+            <div id="app" class="max-w-4xl mx-auto">
+                @yield('content')
+            </div>
+        </main>
 
         @yield('scripts')
 

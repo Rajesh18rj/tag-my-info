@@ -60,7 +60,7 @@ class QrBatchController extends Controller
                 $data = url('/qr-details/' . $qr->id);
 
                 // Label below QR
-                $labelText = "UID: {$qr->uid} | PIN: {$qr->pin}";
+                $labelText = "ID: {$qr->uid} | PIN: {$qr->pin}";
 
                 $qrImage = \Endroid\QrCode\Builder\Builder::create()
                     ->writer(new \Endroid\QrCode\Writer\PngWriter())
