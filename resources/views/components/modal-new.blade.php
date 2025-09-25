@@ -52,17 +52,16 @@
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
 
-                        <form method="POST" action="{{ $baseUrl }}/{{ $item->id }}" id="delete-form-{{ $item->id }}">
+                        <form method="POST" action="{{ $baseUrl }}/{{ $item->id }}"
+                              onsubmit="return confirm('Are you sure you want to delete this item?');">
                             @csrf
                             @method('DELETE')
-                            <button type="button"
-                                    class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition delete-btn"
-                                    data-form-id="delete-form-{{ $item->id }}"
+                            <button type="submit"
+                                    class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition"
                                     title="Delete">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </form>
-
                     </div>
                 </li>
             @endforeach
@@ -151,49 +150,3 @@
         });
     })();
 </script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Show success message if present
-        @if(session('success'))
-        Swal.fire({
-            title: 'Deleted!',
-            text: '{{ session('success') }}',
-            icon: 'success',
-            confirmButtonColor: '#dc2626',
-            timer: 3000,
-            timerProgressBar: true
-        });
-        @endif
-
-        // Handle delete button clicks
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const formId = this.getAttribute('data-form-id');
-                const form = document.getElementById(formId);
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this action!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc2626',
-                    cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel',
-                    reverseButtons: true,
-                    customClass: {
-                        popup: 'animate__animated animate__fadeInDown'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    });
-</script>
-
