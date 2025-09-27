@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Str;
 
 class QrBatchController extends Controller
 {
@@ -48,38 +49,162 @@ class QrBatchController extends Controller
             ->with('success', 'Batch created with ' . $request->count . ' QR codes.');
     }
 
+//    public function download(QrBatch $batch)
+//    {
+//        $zipFileName = "batch_{$batch->id}.zip";
+//        $zipPath = storage_path("app/public/{$zipFileName}");
+//
+//        $zip = new \ZipArchive;
+//        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+//            foreach ($batch->qrcodes as $qr) {
+//                // Data points to the details page (just like single download)
+//                $data = url('/qr-details/' . $qr->id);
+//
+//                // Label below QR
+//                $labelText = "ID: {$qr->uid} | PIN: {$qr->pin}";
+//
+//                $qrImage = \Endroid\QrCode\Builder\Builder::create()
+//                    ->writer(new \Endroid\QrCode\Writer\PngWriter())
+//                    ->data($data)
+//                    ->size(300)
+//                    ->margin(10)
+//                    ->labelText($labelText)
+//                    ->build();
+//
+//                // Save each QR with its code as filename
+//                $zip->addFromString("{$qr->code}.png", $qrImage->getString());
+//            }
+//            $zip->close();
+//        }
+//
+////        return response()->download($zipPath)->deleteFileAfterSend(true);
+//        return response()->download($zipPath);
+//
+//    }
+
+
+
     public function download(QrBatch $batch)
     {
         $zipFileName = "batch_{$batch->id}.zip";
         $zipPath = storage_path("app/public/{$zipFileName}");
 
-        $zip = new \ZipArchive;
-        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
-            foreach ($batch->qrcodes as $qr) {
-                // Data points to the details page (just like single download)
-                $data = url('/qr-details/' . $qr->id);
+        $font = public_path('fonts/Roboto-Bold.ttf');
 
-                // Label below QR
-                $labelText = "ID: {$qr->uid} | PIN: {$qr->pin}";
 
-                $qrImage = \Endroid\QrCode\Builder\Builder::create()
-                    ->writer(new \Endroid\QrCode\Writer\PngWriter())
-                    ->data($data)
-                    ->size(300)
-                    ->margin(10)
-                    ->labelText($labelText)
-                    ->build();
-
-                // Save each QR with its code as filename
-                $zip->addFromString("{$qr->code}.png", $qrImage->getString());
-            }
-            $zip->close();
+        // Ensure parent dir exists
+        if (!is_dir(dirname($zipPath))) {
+            @mkdir(dirname($zipPath), 0775, true);
         }
 
-//        return response()->download($zipPath)->deleteFileAfterSend(true);
-        return response()->download($zipPath);
+        $zip = new \ZipArchive();
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            abort(500, 'Failed to create ZIP archive');
+        }
 
+        $templatePath = public_path('template-y.jpg');
+        $fontPath = public_path('fonts/Roboto-Bold.ttf');
+
+        foreach ($batch->qrcodes as $qr) {
+            // Build QR contents
+            $data = url('/qr-details/' . $qr->id);
+
+            $qrImage = Builder::create()
+                ->writer(new PngWriter())
+                ->data($data)
+                ->size(300)
+                ->margin(10)
+                ->build();
+
+            // File name inside zip
+            $filename = trim($qr->code ?: ('qr_' . $qr->id));
+            $filename = Str::of($filename)->replace(['/', '\\'], '-'); // avoid path separators
+            $entryName = "batch_{$batch->id}_{$filename}.png";
+
+            // If profile is Human, composite onto template like single download
+            if ($qr->profile_type === 'Human' && is_file($templatePath) && is_file($fontPath)) {
+
+                // Load template
+                $ext = strtolower(pathinfo($templatePath, PATHINFO_EXTENSION));
+                if ($ext === 'png') {
+                    $template = @imagecreatefrompng($templatePath);
+                    imagealphablending($template, true);
+                    imagesavealpha($template, true);
+                } else {
+                    $template = @imagecreatefromjpeg($templatePath);
+                }
+
+                if ($template) {
+                    // QR image from Endroid
+                    $qrImg = @imagecreatefromstring($qrImage->getString());
+                    if ($qrImg) {
+                        // Resize QR to 200x200
+                        $qrResized = imagecreatetruecolor(200, 200);
+                        imagealphablending($qrResized, false);
+                        imagesavealpha($qrResized, true);
+                        $transparent = imagecolorallocatealpha($qrResized, 0, 0, 0, 127);
+                        imagefill($qrResized, 0, 0, $transparent);
+
+                        imagecopyresampled(
+                            $qrResized, $qrImg,
+                            0, 0, 0, 0,
+                            200, 200, imagesx($qrImg), imagesy($qrImg)
+                        );
+
+                        // Composite to same coords as single method
+                        imagecopy($template, $qrResized, 637, 80, 0, 0, 200, 200);
+
+                        // Colors
+                        $black = imagecolorallocate($template, 0, 0, 0);      // Values
+                        $darkGrey = imagecolorallocate($template, 130 , 130, 130); // Labels
+
+                        $fontSize = 24;
+
+                        // Full text as black (value part will remain)
+                        imagettftext($template, $fontSize, 90, 540, 260, $black, $font, "ID : " . (string)$qr->uid);
+
+                        // Overdraw only the label in dark grey at same position
+                        imagettftext($template, $fontSize, 90, 540, 260, $darkGrey, $font, "ID : ");
+
+                        // Same for PIN
+                        imagettftext($template, $fontSize, 90, 590, 260, $black, $font, "PIN : " . (string)$qr->pin);
+                        imagettftext($template, $fontSize, 90, 590, 260, $darkGrey, $font, "PIN : ");
+
+                        // Buffer final PNG
+                        ob_start();
+                        imagepng($template);
+                        $pngData = ob_get_clean();
+
+                        // Cleanup
+                        imagedestroy($template);
+                        imagedestroy($qrImg);
+                        imagedestroy($qrResized);
+
+                        // Write entry
+                        $zip->addFromString($entryName, $pngData); // binary safe per manual
+                    } else {
+                        // Fallback: plain QR if GD failed to create image from string
+                        $zip->addFromString($entryName, $qrImage->getString());
+                    }
+                } else {
+                    // Fallback: template missing/unloadable
+                    $zip->addFromString($entryName, $qrImage->getString());
+                }
+            } else {
+                // Non-human or missing assets: plain QR
+                $zip->addFromString($entryName, $qrImage->getString()); // binary safe
+            }
+        }
+
+        $zip->close();
+
+        // Return and remove after send
+        return response()->download($zipPath, $zipFileName, [
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => "attachment; filename=\"{$zipFileName}\"",
+        ])->deleteFileAfterSend(true);
     }
+
 
 
     public function updateStatus(Request $request, QrBatch $batch)
