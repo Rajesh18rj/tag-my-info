@@ -12,7 +12,7 @@
     $baseUrl = rtrim($baseUrl ?? '', '/');
 @endphp
 
-<fieldset class="ml-1 relative border-2 border-red-400 rounded-lg p-6 shadow-md bg-gray-50 max-w-3xl mx-auto mb-4">
+<fieldset class="ml-1 relative border-2 border-red-400 rounded-lg p-6 shadow-md bg-gray-50 max-w-5xl mx-auto mb-4">
     <legend class="text-red-700 font-semibold mb-2 bg-red-100 px-3 py-1 rounded-md shadow-sm inline-block">
         {{ $title }}
     </legend>

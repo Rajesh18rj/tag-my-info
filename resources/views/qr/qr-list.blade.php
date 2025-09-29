@@ -1,12 +1,12 @@
 @extends('layouts.new-layout')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-8 px-4">
-        <div class="flex items-center mb-8 border-b pb-4">
+    <div class="max-w-7xl mx-auto py-8 px-0">
+        <div class="flex items-center mb-2 border-b pb-4">
             <span class="bg-red-100 text-red-600 rounded-xl p-3 mr-4 shadow-sm">
-                <i class="fa fa-qrcode text-2xl"></i>
+                <i class="fa fa-qrcode text-xl"></i>
             </span>
-            <h2 class="text-3xl font-bold text-gray-800 tracking-wide">
+            <h2 class="text-2xl font-bold text-gray-800 tracking-wide">
                 All <span class="text-red-600">QR Codes</span>
             </h2>
         </div>
@@ -56,11 +56,12 @@
                         <th class="py-3 px-4 text-left">QR Type</th>
                         <th class="py-3 px-4 text-left">UID</th>
                         <th class="py-3 px-4 text-left">PIN</th>
+                        <th class="py-3 px-4 text-left">Batch No</th>
                         <th class="py-3 px-4 text-left">Code</th>
-                        <th class="py-3 px-4 text-left">Code Image</th>
+                        <th class="py-3 px-4 text-center">Code Image</th>
                         <th class="py-3 px-4 text-left">Status</th>
                         <th class="py-3 px-4 text-left">Details</th>
-                        <th class="py-3 px-4 text-center">Actions</th>
+                        <th class="py-3 px-4 text-left">Actions</th>
                     </tr>
                 </thead>
 

@@ -3,21 +3,27 @@
 @section('title', 'Profiles')
 
 @section('content')
-    <div class="flex justify-between items-center mb-6 mt-6 flex-wrap">
-        <h1 class="text-3xl sm:text-2xl xs:text-xl font-bold uppercase bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-transparent bg-clip-text drop-shadow-md tracking-widest mb-6">
+    <div class="flex justify-between items-center mb-6 mt-10 flex-wrap max-w-5xl mx-auto">
+        <h1 class="flex items-center gap-3 text-2xl sm:text-2xl xs:text-xl uppercase font-bold text-red-600 drop-shadow-sm tracking-wide mb-6">
+    <span class="p-2 bg-red-100 text-red-700 rounded-xl shadow-sm">
+        <i class="fa-solid fa-user-group"></i>
+    </span>
             My Profiles
         </h1>
+
+
         <a href="{{ route('profiles.create') }}"
-           class="inline-flex items-center bg-red-700 text-white px-6 py-3 sm:px-4 sm:py-2 xs:px-3 xs:py-1 rounded-lg shadow-lg
-           hover:bg-red-800 hover:shadow-xl transition duration-300 ease-in-out transform
-           hover:scale-105 font-semibold tracking-wide text-base sm:text-sm xs:text-xs">
-            <i class="fas fa-plus mr-3"></i>
-            Create New Profile
+           class="inline-flex items-center gap-2 rounded-lg bg-red-600 text-white px-5 py-2.5
+          hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+          transition-colors">
+            <i class="fa-solid fa-plus text-sm"></i>
+            <span class="text-sm font-medium">Create New Profile</span>
         </a>
+
     </div>
 
 
-    <table class="table-auto w-full border-collapse border border-gray-300 rounded-lg overflow-hidden shadow-lg">
+    <table class="table-auto mx-auto max-w-5xl w-full border-collapse border border-gray-300 rounded-lg overflow-hidden shadow-lg">
         <thead class="bg-red-600 text-white">
         <tr>
             <th class="border border-red-700 px-4 py-2 text-center">Type</th>

@@ -32,38 +32,38 @@
 
         <!-- Page Content -->
         <main>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    @if(session('success'))
-                    Swal.fire({
-                        icon: 'success',
-                        title: '{{ session('success') }}',
-                        toast: true,
-                        position: 'top-right',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-                    @endif
-
-                    @if(session('error'))
-                    Swal.fire({
-                        icon: 'error',
-                        title: '{{ session('error') }}',
-                        toast: true,
-                        position: 'top-right',
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true
-                    });
-                    @endif
-                });
-            </script>
-
-            <div id="app" class="max-w-4xl mx-auto">
+            <div id="app" class="max-w-6xl mx-auto text-sm">
                 @yield('content')
             </div>
         </main>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: '{{ session('success') }}',
+                    toast: true,
+                    position: 'top-right',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                @endif
+
+                @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: '{{ session('error') }}',
+                    toast: true,
+                    position: 'top-right',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+                @endif
+            });
+        </script>
 
         @yield('scripts')
 

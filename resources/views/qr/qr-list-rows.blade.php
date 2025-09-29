@@ -13,6 +13,7 @@
         </td>
         <td class="py-2 px-4 font-mono text-sm">{{ $qr->uid }}</td>
         <td class="py-2 px-4 font-mono text-sm">{{ $qr->pin }}</td>
+        <td class="py-2 px-4 text-center">{{ $qr->batch_id }}</td>
         <td class="py-2 px-4">{{ $qr->code }}</td>
         <td class="py-2 px-4 flex justify-center items-center">
             {!! QrCode::size(90)->generate(url('/qr-details/' . $qr->id)) !!}
@@ -26,10 +27,7 @@
         </td>
         <td class="py-2 px-4">
             @if($qr->detail)
-{{--                <span title="{{ $qr->detail->email }}">--}}
                 {{ $qr->detail->name }}
-{{--<span class="text-gray-400">({{ $qr->detail->email }})</span>--}}
-{{--            </span>--}}
             @else
                 <span class="text-gray-400">-</span>
             @endif
@@ -48,7 +46,6 @@
                 <i class="fa fa-download"></i>
             </a>
         </td>
-
 
 
     </tr>

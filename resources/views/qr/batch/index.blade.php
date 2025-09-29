@@ -4,7 +4,7 @@
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <!-- Header Section -->
         <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-xl p-6 mb-8 border border-red-200 shadow-lg">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center">
+            <h1 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
                 <i class="fas fa-qrcode text-red-600 mr-3"></i>
                 QR Batches Management
             </h1>
