@@ -114,37 +114,70 @@ class QrCodeController extends Controller
 
 
     // QR Details
-    public function showDetails($id)
+//    public function showDetails($id)
+//    {
+//        // Find the QR code
+//        $qr = QrCode::findOrFail($id);
+//
+//        // Load all QR details with profiles linked to this QR
+//        $qrDetails = QrCodeDetail::with('profile')
+//            ->where('qr_code_id', $id)
+//            ->get();
+//
+//        if ($qrDetails->isEmpty()) {
+//            return "No profiles mapped yet for this QR Code.";
+//        }
+//
+//        //  Check if all linked profiles are private
+//        $hasPublicProfile = $qrDetails->contains(function ($detail) {
+//            return $detail->profile && $detail->profile->is_public;
+//        });
+//
+//        if (! $hasPublicProfile) {
+//            return response()->view('profiles.private-profile', compact('qr'), 403);
+////             return "This profile is private.";
+//        }
+//
+//        // If at least one profile is public, filter only public ones
+//        $qrDetails = $qrDetails->filter(function ($detail) {
+//            return $detail->profile && $detail->profile->is_public;
+//        });
+//
+//        return view('qr.qr-details', compact('qr', 'qrDetails'));
+//    }
+
+    public function showDetails($uid)
     {
-        // Find the QR code
-        $qr = QrCode::findOrFail($id);
+        // Find the QR code by UID
+        $qr = QrCode::where('uid', $uid)->firstOrFail();
 
         // Load all QR details with profiles linked to this QR
         $qrDetails = QrCodeDetail::with('profile')
-            ->where('qr_code_id', $id)
+            ->where('qr_code_id', $qr->id)
             ->get();
 
         if ($qrDetails->isEmpty()) {
             return "No profiles mapped yet for this QR Code.";
         }
 
-        //  Check if all linked profiles are private
+        // Check if all linked profiles are private
         $hasPublicProfile = $qrDetails->contains(function ($detail) {
             return $detail->profile && $detail->profile->is_public;
         });
 
         if (! $hasPublicProfile) {
             return response()->view('profiles.private-profile', compact('qr'), 403);
-//             return "This profile is private.";
         }
 
-        // If at least one profile is public, filter only public ones
+        // Only keep public profiles
         $qrDetails = $qrDetails->filter(function ($detail) {
             return $detail->profile && $detail->profile->is_public;
         });
 
         return view('qr.qr-details', compact('qr', 'qrDetails'));
     }
+
+
 
 
 //    public function download($id)
@@ -179,7 +212,7 @@ class QrCodeController extends Controller
         $qr = \App\Models\QrCode::findOrFail($id);
 
         // Build QR (Endroid)
-        $data = url('/qr-details/' . $qr->id);
+        $data = url('/view-details/' . $qr->uid);
         $result = \Endroid\QrCode\Builder\Builder::create()
             ->writer(new \Endroid\QrCode\Writer\PngWriter())
             ->data($data)

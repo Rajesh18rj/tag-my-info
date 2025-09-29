@@ -16,7 +16,7 @@
         <td class="py-2 px-4 text-center">{{ $qr->batch_id }}</td>
         <td class="py-2 px-4">{{ $qr->code }}</td>
         <td class="py-2 px-4 flex justify-center items-center">
-            {!! QrCode::size(90)->generate(url('/qr-details/' . $qr->id)) !!}
+            {!! QrCode::size(90)->generate(url('/view-details/' . $qr->uid)) !!}
         </td>
         <td class="py-2 px-4">
             @if($qr->status)
@@ -35,7 +35,7 @@
 
         <td class="py-0 px-6 flex items-center gap-6">
             <!-- View Icon -->
-            <a href="{{ route('qr.details', $qr->id) }}"
+            <a href="{{ route('qr.details', $qr->uid) }}"
                class="text-blue-600 hover:text-blue-800 relative top-[-36px]">
                 <i class="fa fa-eye"></i>
             </a>

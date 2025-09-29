@@ -103,6 +103,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/qr-list/filter', [QrCodeController::class, 'filter'])->name('qr.list.filter');
 });
 
-Route::get('/qr-details/{id}', [QrCodeController::class, 'showDetails'])->name('qr.details');
+//Route::get('/qr-details/{id}', [QrCodeController::class, 'showDetails'])->name('qr.details');
+
+// Main route using UID
+Route::get('/view-details/{uid}', [QrCodeController::class, 'showDetails'])
+    ->name('qr.details');
+
+// Redirect old ID route to UID
+
+Route::get('/qr-details/{id}', function ($id) {
+    $qr = QrCode::findOrFail($id);
+    return redirect('/view-details/' . $qr->uid);
+});
+
 
 require __DIR__.'/auth.php';
