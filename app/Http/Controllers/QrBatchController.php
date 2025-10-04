@@ -102,7 +102,7 @@ class QrBatchController extends Controller
             abort(500, 'Failed to create ZIP archive');
         }
 
-        $templatePath = public_path('template-y.jpg');
+        $templatePath = public_path('red2.jpg');
         $fontPath = public_path('fonts/Roboto-Bold.ttf');
 
         foreach ($batch->qrcodes as $qr) {
@@ -148,27 +148,27 @@ class QrBatchController extends Controller
                         imagecopyresampled(
                             $qrResized, $qrImg,
                             0, 0, 0, 0,
-                            200, 200, imagesx($qrImg), imagesy($qrImg)
+                            210, 210, imagesx($qrImg), imagesy($qrImg)
                         );
 
                         // Composite to same coords as single method
-                        imagecopy($template, $qrResized, 637, 80, 0, 0, 200, 200);
+                        imagecopy($template, $qrResized, 630, 74, 0, 0, 200, 200);
 
                         // Colors
                         $black = imagecolorallocate($template, 0, 0, 0);      // Values
                         $darkGrey = imagecolorallocate($template, 130 , 130, 130); // Labels
 
-                        $fontSize = 24;
+                        $fontSize = 30;
 
                         // Full text as black (value part will remain)
-                        imagettftext($template, $fontSize, 90, 540, 260, $black, $font, "ID : " . (string)$qr->uid);
+                        imagettftext($template, $fontSize, 90, 540, 280, $black, $font, "ID : " . (string)$qr->uid);
 
                         // Overdraw only the label in dark grey at same position
-                        imagettftext($template, $fontSize, 90, 540, 260, $darkGrey, $font, "ID : ");
+                        imagettftext($template, $fontSize, 90, 540, 280, $darkGrey, $font, "ID : ");
 
                         // Same for PIN
-                        imagettftext($template, $fontSize, 90, 590, 260, $black, $font, "PIN : " . (string)$qr->pin);
-                        imagettftext($template, $fontSize, 90, 590, 260, $darkGrey, $font, "PIN : ");
+                        imagettftext($template, $fontSize, 90, 590, 280, $black, $font, "PIN : " . (string)$qr->pin);
+                        imagettftext($template, $fontSize, 90, 590, 280, $darkGrey, $font, "PIN : ");
 
                         // Buffer final PNG
                         ob_start();

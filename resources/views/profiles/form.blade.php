@@ -3,7 +3,7 @@
 @section('title', $profile->exists ? 'Edit Profile' : 'Create Profile')
 
 @section('content')
-    <h1 class="text-2xl font-bold text-red-600 mb-10 mt-6 flex items-center gap-3">
+    <h1 class="text-2xl font-bold text-red-600 mb-10 mt-6 flex max-w-4xl mx-auto items-center gap-3">
         @if($profile->exists)
             <i class="fas fa-user-edit text-gray-700"></i>
             Edit Profile
@@ -15,7 +15,7 @@
 
 
     @if($profile->exists)
-        <div class="mb-6 flex justify-between max-w-4xl ">
+        <div class="mb-6 flex justify-between max-w-4xl mx-auto ">
             <a href="{{ route('profiles.link-qr', $profile->id) }}"
                class="inline-flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-lg text-white font-semibold shadow hover:bg-blue-700 transition">
                 <i class="fas fa-link"></i>
@@ -37,7 +37,7 @@
     @if($profile->exists)
         <!-- TABS Navigation -->
         <div class="mb-2">
-            <nav class="flex gap-2 bg-gray-100 p-2 rounded-xl shadow-inner max-w-4xl">
+            <nav class="flex gap-2 bg-gray-100 p-2 rounded-xl shadow-inner max-w-4xl mx-auto">
                 <button type="button"
                         class="tablinks px-6 py-2 rounded-xl font-semibold text-gray-700 border-b-4 border-transparent hover:border-red-400 hover:text-red-700 transition focus:outline-none"
                         onclick="openTab(event, 'profile-details')" id="defaultOpen">
@@ -51,7 +51,7 @@
             </nav>
         </div>
 
-        <div class="rounded-2xl shadow-lg bg-white p-4 max-w-4xl mt-0">
+        <div class="rounded-2xl shadow-lg bg-white p-4 max-w-4xl mx-auto mt-0">
             <!-- Profile Details Tab -->
             <div id="profile-details" class="tabcontent">
                 <form action="{{ route('profiles.update', $profile) }}" method="POST" enctype="multipart/form-data"
@@ -154,7 +154,7 @@
     @else
         <!-- Create Profile Form (no tabs) -->
         <form action="{{ route('profiles.store') }}" method="POST" enctype="multipart/form-data"
-              class="space-y-6 max-w-3xl " id="profileForm">
+              class="space-y-6 max-w-4xl mx-auto " id="profileForm">
             @csrf
             <div class="mb-6">
                 <label for="profileType" class="block mb-2 font-semibold text-gray-700 text-lg">Profile Type</label>

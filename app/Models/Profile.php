@@ -54,5 +54,4 @@ class Profile extends Model
         return $this->hasMany(\App\Models\QrCodeDetail::class);
     }
 
-
 }
