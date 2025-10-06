@@ -2,18 +2,101 @@
     <div class="bg-[#f7f4f2] border border-[#a6705d]/40 rounded-lg shadow-lg px-8 py-3 flex justify-between items-center">
 
         <!-- Home Button -->
-        <button class="flex flex-col items-center text-[#a6705d] hover:text-[#824f3d] transition">
+        <a href="{{ route('dashboard') }}" class="flex flex-col items-center text-[#a6705d] hover:text-[#824f3d] transition">
             <i class="fas fa-home text-xl"></i>
             <span class="text-xs mt-1">Home</span>
+        </a>
+
+            <!-- Emergency Contact Button -->
+        <button onclick="scrollToEmergency()"
+                class="flex flex-col items-center text-[#a6705d] hover:text-[#824f3d] transition">
+            <i class="fas fa-address-book text-xl"></i>
+            <span class="text-xs mt-1">Emergency Contact</span>
         </button>
+
+
 
         <!-- Hamburger Button -->
         <button id="hamburgerBtn" class="flex flex-col items-center text-[#a6705d] hover:text-[#824f3d] transition">
             <i class="fas fa-bars text-xl"></i>
             <span class="text-xs mt-1">Menu</span>
         </button>
-
     </div>
+
+    @if($ptype == 'human')
+        <!-- Overlay -->
+        <div id="menuOverlay" class="fixed inset-0 bg-black/40 hidden z-40 transition-opacity duration-300"></div>
+
+        <!-- Side Menu -->
+        <div id="sideMenu" class="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm
+    bg-white rounded-2xl shadow-2xl border border-[#a6705d]/20 p-5 hidden z-50
+    transform transition-all duration-300 ease-out opacity-0 translate-y-5">
+
+            <!-- Header -->
+            <h3 class="text-[#a6705d] font-semibold text-center text-lg mb-4 tracking-wide">
+                Quick Navigation
+            </h3>
+
+            <!-- Menu List -->
+            <ul class="space-y-3 text-sm">
+                <li>
+                    <button onclick="scrollToSection('emergency')"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-[#fafafa] text-gray-700 font-medium shadow-sm
+                hover:bg-[#f1edea] active:scale-95 transition">
+                        <i class="fas fa-phone-volume text-[#a6705d] text-lg"></i>
+                        Emergency Contacts
+                    </button>
+                </li>
+                <li>
+                    <button onclick="scrollToSection('additional')"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-[#fafafa] text-gray-700 font-medium shadow-sm
+                hover:bg-[#f1edea] active:scale-95 transition">
+                        <i class="fas fa-file-alt text-[#a6705d] text-lg"></i>
+                        Additional Information
+                    </button>
+                </li>
+                <li>
+                    <button onclick="scrollToSection('allergies')"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-[#fafafa] text-gray-700 font-medium shadow-sm
+                hover:bg-[#f1edea] active:scale-95 transition">
+                        <i class="fas fa-hand text-[#a6705d] text-lg"></i>
+                        Allergies
+                    </button>
+                </li>
+                <li>
+                    <button onclick="scrollToSection('medications')"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-[#fafafa] text-gray-700 font-medium shadow-sm
+                hover:bg-[#f1edea] active:scale-95 transition">
+                        <i class="fas fa-pills text-[#a6705d] text-lg"></i>
+                        Medications
+                    </button>
+                </li>
+                <li>
+                    <button onclick="scrollToSection('insurance')"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-[#fafafa] text-gray-700 font-medium shadow-sm
+                hover:bg-[#f1edea] active:scale-95 transition">
+                        <i class="fas fa-hospital-user text-[#a6705d] text-lg"></i>
+                        Health Insurances
+                    </button>
+                </li>
+                <li>
+                    <button onclick="scrollToSection('conditions')"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-[#fafafa] text-gray-700 font-medium shadow-sm
+                hover:bg-[#f1edea] active:scale-95 transition">
+                        <i class="fas fa-heartbeat text-[#a6705d] text-lg"></i>
+                        Vital Medical Conditions
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+    @endif
 
     <script>
         const menuBtn = document.querySelector('#hamburgerBtn');
@@ -52,5 +135,15 @@
         }
 
     </script>
+
+    <script>
+        // NEW: emergency-only scroll (won’t open/close menu)
+        function scrollToEmergency() {
+            const el = document.getElementById('emergency');
+            if (!el) return;
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+
 
 </div>

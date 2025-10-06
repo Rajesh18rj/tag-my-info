@@ -76,9 +76,25 @@
 
 <!-- Emergency Contacts -->
 <div id="emergency" class="mt-0 rounded-xl overflow-hidden border border-[#a6705d]/30 bg-white">
-    <!-- Header -->
+
+    @php
+        $num = trim($contact->mobile_number ?? '');
+        $cleanNum = $num ? preg_replace('/\s+/', '', $num) : '';
+
+        // Add +91 only if country is India
+        if ($cleanNum) {
+            if (isset($profile->country) && strtolower($profile->country) === 'india') {
+                $tel = 'tel:+91' . $cleanNum;
+            } else {
+                $tel = 'tel:' . $cleanNum;
+            }
+        } else {
+            $tel = '';
+        }
+    @endphp
+
+        <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-[#f7f4f2] border-b border-[#a6705d]/20">
-        <div class="h-5 w-1.5 rounded-full bg-[#a6705d]"></div>
         <i class="fas fa-phone-volume text-[#a6705d] text-sm"></i>
         <p class="font-semibold text-[#7a5547] text-sm">Emergency Contacts</p>
     </div>
@@ -97,8 +113,14 @@
                                 @endif
                             </div>
                             <div class="text-gray-700 text-sm break-words">
-                                {{ $contact->mobile_number }}
+                                @if(isset($profile->country) && strtolower($profile->country) === 'india')
+                                    <span class="text-[#a6705d] font-medium tracking-wide mr-1">+91</span>
+                                    {{ $contact->mobile_number }}
+                                @else
+                                    {{ $contact->mobile_number }}
+                                @endif
                             </div>
+
                         </div>
 
                         <!-- Call button -->
@@ -125,7 +147,6 @@
 <!-- Additional Information -->
 <div>
     <div id="additional" class="flex items-center gap-2 px-3 py-2 bg-[#f7f4f2] border border-[#a6705d]/30 rounded-t-lg">
-        <div class="h-4 w-1.5 rounded-full bg-[#a6705d]"></div>
         <i class="fa-solid fa-plus text-[#7a5547] text-sm"></i>
         <h2 class="text-sm font-semibold text-[#7a5547]">Additional information</h2>
     </div>
@@ -384,78 +405,4 @@
     </div>
 </div>
 
-@if($ptype == 'human')
-    <!-- Overlay -->
-    <div id="menuOverlay" class="fixed inset-0 bg-black/40 hidden z-40 transition-opacity duration-300"></div>
 
-    <!-- Side Menu -->
-    <div id="sideMenu" class="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm
-    bg-white rounded-2xl shadow-2xl border border-[#a6705d]/20 p-5 hidden z-50
-    transform transition-all duration-300 ease-out opacity-0 translate-y-5">
-
-        <!-- Header -->
-        <h3 class="text-[#a6705d] font-semibold text-center text-lg mb-4 tracking-wide">
-            Quick Navigation
-        </h3>
-
-        <!-- Menu List -->
-        <ul class="space-y-3 text-sm">
-            <li>
-                <button onclick="scrollToSection('emergency')"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-[#fafafa] text-gray-700 font-medium shadow-sm
-                hover:bg-[#f1edea] active:scale-95 transition">
-                    <i class="fas fa-phone-volume text-[#a6705d] text-lg"></i>
-                    Emergency Contacts
-                </button>
-            </li>
-            <li>
-                <button onclick="scrollToSection('additional')"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-[#fafafa] text-gray-700 font-medium shadow-sm
-                hover:bg-[#f1edea] active:scale-95 transition">
-                    <i class="fas fa-file-alt text-[#a6705d] text-lg"></i>
-                    Additional Information
-                </button>
-            </li>
-            <li>
-                <button onclick="scrollToSection('allergies')"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-[#fafafa] text-gray-700 font-medium shadow-sm
-                hover:bg-[#f1edea] active:scale-95 transition">
-                    <i class="fas fa-hand text-[#a6705d] text-lg"></i>
-                    Allergies
-                </button>
-            </li>
-            <li>
-                <button onclick="scrollToSection('medications')"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-[#fafafa] text-gray-700 font-medium shadow-sm
-                hover:bg-[#f1edea] active:scale-95 transition">
-                    <i class="fas fa-pills text-[#a6705d] text-lg"></i>
-                    Medications
-                </button>
-            </li>
-            <li>
-                <button onclick="scrollToSection('insurance')"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-[#fafafa] text-gray-700 font-medium shadow-sm
-                hover:bg-[#f1edea] active:scale-95 transition">
-                    <i class="fas fa-hospital-user text-[#a6705d] text-lg"></i>
-                    Health Insurances
-                </button>
-            </li>
-            <li>
-                <button onclick="scrollToSection('conditions')"
-                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-                bg-[#fafafa] text-gray-700 font-medium shadow-sm
-                hover:bg-[#f1edea] active:scale-95 transition">
-                    <i class="fas fa-heartbeat text-[#a6705d] text-lg"></i>
-                    Vital Medical Conditions
-                </button>
-            </li>
-        </ul>
-    </div>
-
-
-@endif

@@ -29,10 +29,10 @@
     </div>
 
     <!-- Profile Image -->
-    <div class="flex items-center justify-center px-4 pt-4 pb-2 ">
+    <div class="flex items-center justify-center px-4 pt-4 pb-0 ">
         @if(!empty($qrDetails[0]->profile->profile_image))
             <img src="{{ Storage::url($qrDetails[0]->profile->profile_image) }}" alt="Profile Image"
-                 class="h-24 w-24 object-cover rounded-full border-2 border-gray-400 shadow-md">
+                 class="h-32 w-32 object-cover rounded-full border-2 border-gray-400 shadow-md">
         @else
             <img src="{{ asset('images/empty.jpg') }}" alt="Default Profile Image"
                  class="h-20 w-20 object-cover rounded-full border-2 border-gray-300 shadow-md">
@@ -84,7 +84,6 @@
     @if($ptype == 'human' || $ptype == 'pet')
         @include('qr.details.nav-bar')
     @endif
-
 
 </body>
 </html>
