@@ -1,11 +1,12 @@
 <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm">
-    <div class="bg-[#f7f4f2] border border-[#a6705d]/40 rounded-lg shadow-lg px-8 py-3 flex justify-between items-center">
+    <div class="bg-[#f7f4f2] border border-[#a6705d]/40 shadow-lg px-8 py-3 flex justify-between items-center">
 
         <!-- Home Button -->
-        <a href="{{ route('dashboard') }}" class="flex flex-col items-center text-[#a6705d] hover:text-[#824f3d] transition">
+        <button onclick="scrollToTop()"
+                class="flex flex-col items-center text-[#a6705d] hover:text-[#824f3d] transition">
             <i class="fas fa-home text-xl"></i>
             <span class="text-xs mt-1">Home</span>
-        </a>
+        </button>
 
         @if($ptype == 'human')
         <!-- Emergency Contact Button -->
@@ -43,9 +44,15 @@
     transform transition-all duration-300 ease-out opacity-0 translate-y-5">
 
             <!-- Header -->
-            <h3 class="text-[#a6705d] font-semibold text-center text-lg mb-4 tracking-wide">
-                Quick Navigation
-            </h3>
+            <div class="relative mb-4">
+                <h3 class="text-[#a6705d] font-semibold text-lg tracking-wide text-center">
+                    Quick Navigation
+                </h3>
+                <button id="closeMenuBtn"
+                        class="absolute right-0 top-0 text-gray-500 hover:text-red-500 transition">
+                    <i class="fas fa-circle-xmark text-3xl"></i>
+                </button>
+            </div>
 
             <!-- Menu List -->
             <ul class="space-y-3 text-sm">
@@ -67,6 +74,8 @@
                         Additional Information
                     </button>
                 </li>
+
+                @if($profile->allergies && $profile->allergies->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('allergies')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -76,6 +85,9 @@
                         Allergies
                     </button>
                 </li>
+                @endif
+
+                @if($profile->medications && $profile->medications->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('medications')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -85,6 +97,9 @@
                         Medications
                     </button>
                 </li>
+                @endif
+
+                @if($profile->healthInsurances && $profile->healthInsurances->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('insurance')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -94,6 +109,9 @@
                         Health Insurances
                     </button>
                 </li>
+                @endif
+
+                @if($profile->vitalMedicalConditions && $profile->vitalMedicalConditions->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('conditions')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -103,9 +121,9 @@
                         Vital Medical Conditions
                     </button>
                 </li>
+                @endif
             </ul>
         </div>
-
     @endif
 
     <!---------------------- For Pet ---------------------------------------->
@@ -119,9 +137,15 @@
     transform transition-all duration-300 ease-out opacity-0 translate-y-5">
 
             <!-- Header -->
-            <h3 class="text-[#a6705d] font-semibold text-center text-lg mb-4 tracking-wide">
-                Quick Navigation
-            </h3>
+            <div class="relative mb-4">
+                <h3 class="text-[#a6705d] font-semibold text-lg tracking-wide text-center">
+                    Quick Navigation
+                </h3>
+                <button id="closeMenuBtn"
+                        class="absolute right-0 top-0 text-gray-500 hover:text-red-500 transition">
+                    <i class="fas fa-circle-xmark text-3xl"></i>
+                </button>
+            </div>
 
             <!-- Menu List -->
             <ul class="space-y-3 text-sm">
@@ -188,6 +212,8 @@
         const menuBtn = document.querySelector('#hamburgerBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('menuOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn'); //this for close modal
+
 
         function toggleMenu() {
             const isOpen = !sideMenu.classList.contains('hidden');
@@ -214,6 +240,8 @@
 
         menuBtn.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+
 
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -237,6 +265,12 @@
             const el = document.getElementById('pet-owners');
             if (!el) return;
             el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+
+    <script>
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 

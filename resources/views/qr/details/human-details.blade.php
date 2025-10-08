@@ -221,6 +221,7 @@
 </div>
 
 <!-- Allergies -->
+@if($profile->allergies && $profile->allergies->isNotEmpty())
 <div id="allergies" class="mt-0 rounded-2xl overflow-hidden border border-orange-200 bg-white">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-orange-50 border-b border-orange-200">
@@ -232,7 +233,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->allergies && $profile->allergies->isNotEmpty())
             <ul class="space-y-2.5">
                 @foreach($profile->allergies as $allergy)
                     <li class="rounded-lg border border-orange-200/70 bg-orange-50/40 p-3">
@@ -261,13 +261,12 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No allergies recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
 
 <!-- Medications -->
+@if($profile->medications && $profile->medications->isNotEmpty())
 <div id="medications"  class="mt-0 rounded-2xl overflow-hidden border border-emerald-200 bg-white">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-emerald-50 border-b border-emerald-200">
@@ -279,7 +278,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->medications && $profile->medications->isNotEmpty())
             <ul class="space-y-2.5">
                 @foreach($profile->medications as $med)
                     <li class="rounded-lg border border-emerald-200/70 bg-emerald-50/40 p-3">
@@ -328,13 +326,12 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No medications recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
 
 <!-- Health Insurances -->
+@if($profile->healthInsurances && $profile->healthInsurances->isNotEmpty())
 <div id="insurance" class="mt-0 rounded-2xl overflow-hidden border border-fuchsia-200 bg-white">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-fuchsia-50 border-b border-fuchsia-200">
@@ -346,7 +343,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->healthInsurances && $profile->healthInsurances->isNotEmpty())
             <ul class="space-y-2.5">
                 @foreach($profile->healthInsurances as $insurance)
                     <li class="rounded-lg border border-fuchsia-200/70 bg-fuchsia-50/40 p-3">
@@ -375,13 +371,13 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No health insurances recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
+
 
 <!-- Vital Medical Conditions -->
+@if($profile->vitalMedicalConditions && $profile->vitalMedicalConditions->isNotEmpty())
 <div id="conditions"  class="mt-0 rounded-2xl overflow-hidden border border-indigo-200 bg-white mb-16">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-indigo-50 border-b border-indigo-200">
@@ -393,7 +389,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->vitalMedicalConditions && $profile->vitalMedicalConditions->isNotEmpty())
             <ul class="space-y-2.5">
                 @foreach($profile->vitalMedicalConditions as $condition)
                     <li class="rounded-lg border border-indigo-200/70 bg-indigo-50/40 p-3">
@@ -422,10 +417,16 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No vital medical conditions recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
+
+
+@if(
+    (!$profile->vitalMedicalConditions || $profile->vitalMedicalConditions->isEmpty())
+)
+    <div class="mt-12"></div>
+@endif
+
 
 
