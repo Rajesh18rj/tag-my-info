@@ -123,18 +123,41 @@
 
                         </div>
 
-                        <!-- Call button -->
+                        <!-- Call & WhatsApp buttons -->
                         @php
                             $num = trim($contact->mobile_number ?? '');
-                            $tel = $num ? 'tel:' . preg_replace('/\s+/', '', $num) : '';
+                            $cleanNum = $num ? preg_replace('/\s+/', '', $num) : '';
+                            $tel = $cleanNum ? 'tel:' . $cleanNum : '';
+
+                            // WhatsApp link
+                            if ($cleanNum) {
+                                if (isset($profile->country) && strtolower($profile->country) === 'india') {
+                                    $waLink = 'https://wa.me/91' . $cleanNum;
+                                } else {
+                                    $waLink = 'https://wa.me/' . $cleanNum;
+                                }
+                            } else {
+                                $waLink = '';
+                            }
                         @endphp
-                        @if($tel)
-                            <a href="{{ $tel }}"
-                               class="shrink-0 inline-flex items-center justify-center rounded-md bg-green-400 text-white px-2.5 py-1.5 text-xs font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#a6705d] focus:ring-offset-2">
-                                <i class="fa-solid fa-phone mr-1 text-[11px]"></i>
-                                Call
-                            </a>
-                        @endif
+
+                        <div class="flex gap-2">
+                            @if($tel)
+                                <a href="{{ $tel }}"
+                                   class="shrink-0 inline-flex items-center justify-center rounded-md bg-blue-500 text-white px-2.5 py-1.5 text-xs font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-[#a6705d] focus:ring-offset-2">
+                                    <i class="fa-solid fa-phone mr-2 text-[13px]"></i>
+                                    Call
+                                </a>
+                            @endif
+
+                                @if($waLink)
+                                    <a href="{{ $waLink }}" target="_blank"
+                                       class="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-[#25D366] text-white text-xl shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#a6705d] focus:ring-offset-2">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                @endif
+                        </div>
+
                     </li>
                 @endforeach
             </ul>
