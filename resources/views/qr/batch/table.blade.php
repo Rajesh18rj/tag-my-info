@@ -149,16 +149,21 @@
 </div>
 
 <script>
+    // Create a container for all toasts
+    let toastContainer = document.createElement('div');
+    toastContainer.className = 'fixed top-5 right-5 flex flex-col space-y-2 z-50';
+    document.body.appendChild(toastContainer);
+
     document.querySelectorAll('.edit-status-btn').forEach(button => {
         button.addEventListener('click', function() {
             const batchId = this.dataset.id;
             const currentStatus = this.dataset.status;
 
             const statusMap = {
-                'pending': { text: 'Pending for Print', class: 'bg-yellow-100 text-yellow-800', icon: 'fas fa-clock' },
-                'sending': { text: 'Sending for Print', class: 'bg-blue-100 text-blue-800', icon: 'fas fa-paper-plane' },
-                'received': { text: 'Received from Print', class: 'bg-purple-100 text-purple-800', icon: 'fas fa-inbox' },
-                'verified': { text: 'Verified & Completed', class: 'bg-green-100 text-green-800', icon: 'fas fa-check-circle' }
+                'pending': { text: 'Pending for Print', class: 'bg-yellow-100 text-yellow-800', icon: 'fas fa-clock', toastColor: 'bg-yellow-500' },
+                'sending': { text: 'Sending for Print', class: 'bg-blue-100 text-blue-800', icon: 'fas fa-paper-plane', toastColor: 'bg-blue-500' },
+                'received': { text: 'Received from Print', class: 'bg-purple-100 text-purple-800', icon: 'fas fa-inbox', toastColor: 'bg-purple-500' },
+                'verified': { text: 'Verified & Completed', class: 'bg-green-100 text-green-800', icon: 'fas fa-check-circle', toastColor: 'bg-green-500' }
             };
 
             // Remove existing modal
@@ -228,9 +233,10 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
+                            const info = statusMap[newStatus];
+
                             // Update badge
                             const badge = button.closest('td').querySelector('.status-text');
-                            const info = statusMap[newStatus];
                             badge.className = `status-text inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${info.class}`;
                             badge.innerHTML = `<i class="${info.icon} text-xs mr-2"></i>${info.text}`;
                             button.dataset.status = newStatus;
@@ -242,22 +248,24 @@
                             modal.classList.add('scale-90');
                             setTimeout(() => overlay.remove(), 300);
 
-                            // Show success toast
+                            // Toast
                             const toast = document.createElement('div');
-                            toast.className = 'fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg opacity-0 transform translate-y-[-20px] transition-all duration-300 z-50';
-                            toast.textContent = `Status Updated to "${info.text}"`;
-                            document.body.appendChild(toast);
+                            toast.className = `flex items-center space-x-2 ${info.toastColor} text-white px-4 py-2 rounded shadow-lg opacity-0 transform translate-x-10 transition-all duration-300`;
+                            toast.innerHTML = `<i class="${info.icon}"></i><span>Status Updated: ${info.text}</span>`;
+                            toastContainer.appendChild(toast);
+
+                            // Animate in
                             setTimeout(() => {
                                 toast.classList.add('opacity-100');
-                                toast.classList.remove('translate-y-[-20px]');
+                                toast.classList.remove('translate-x-10');
                             }, 10);
 
+                            // Animate out
                             setTimeout(() => {
                                 toast.classList.remove('opacity-100');
-                                toast.classList.add('translate-y-[-20px]');
+                                toast.classList.add('translate-x-10');
                                 setTimeout(() => toast.remove(), 300);
                             }, 1800);
-
                         } else {
                             alert('Unable to update status.');
                         }

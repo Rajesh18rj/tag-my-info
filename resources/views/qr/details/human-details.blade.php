@@ -359,7 +359,7 @@
 </div>
 
 <!-- Vital Medical Conditions -->
-<div id="conditions"  class="mt-0 rounded-2xl overflow-hidden border border-indigo-200 bg-white mb-14">
+<div id="conditions"  class="mt-0 rounded-2xl overflow-hidden border border-indigo-200 bg-white mb-16">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-indigo-50 border-b border-indigo-200">
                             <span class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-indigo-500/10 text-indigo-600">
