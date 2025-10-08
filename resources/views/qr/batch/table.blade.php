@@ -154,92 +154,136 @@
             const batchId = this.dataset.id;
             const currentStatus = this.dataset.status;
 
-            Swal.fire({
-                title: 'Edit Batch Status',
-                input: 'select',
-                inputOptions: {
-                    'pending': 'Pending for Print',
-                    'sending': 'Sending for Print',
-                    'received': 'Received from Print',
-                    'verified': 'Verified & Completed'
-                },
-                inputValue: currentStatus,
-                showCancelButton: true,
-                confirmButtonText: 'Update Status',
-                cancelButtonText: 'Cancel',
-                confirmButtonColor: '#3b82f6',
-                cancelButtonColor: '#6b7280',
-                customClass: {
-                    popup: 'rounded-xl shadow-2xl',
-                    title: 'text-gray-800 font-semibold'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    axios.post(`/qr-batches/${batchId}/status`, {
-                        status: result.value,
-                        _token: '{{ csrf_token() }}'
+            const statusMap = {
+                'pending': { text: 'Pending for Print', class: 'bg-yellow-100 text-yellow-800', icon: 'fas fa-clock' },
+                'sending': { text: 'Sending for Print', class: 'bg-blue-100 text-blue-800', icon: 'fas fa-paper-plane' },
+                'received': { text: 'Received from Print', class: 'bg-purple-100 text-purple-800', icon: 'fas fa-inbox' },
+                'verified': { text: 'Verified & Completed', class: 'bg-green-100 text-green-800', icon: 'fas fa-check-circle' }
+            };
+
+            // Remove existing modal
+            const existingModal = document.querySelector('.status-modal-overlay');
+            if (existingModal) existingModal.remove();
+
+            // Overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'status-modal-overlay fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 opacity-0 transition-opacity duration-300';
+            document.body.appendChild(overlay);
+
+            // Modal container
+            const modal = document.createElement('div');
+            modal.className = 'bg-white rounded-xl shadow-2xl p-6 w-80 transform transition-transform duration-300 scale-90';
+            overlay.appendChild(modal);
+
+            // Modal title
+            const title = document.createElement('h3');
+            title.textContent = 'Update Batch Status';
+            title.className = 'text-gray-800 font-semibold text-lg mb-4';
+            modal.appendChild(title);
+
+            // Dropdown select
+            const select = document.createElement('select');
+            select.className = 'w-full border border-gray-300 rounded px-3 py-2 mb-4';
+            Object.keys(statusMap).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = statusMap[key].text;
+                if (key === currentStatus) option.selected = true;
+                select.appendChild(option);
+            });
+            modal.appendChild(select);
+
+            // Buttons container
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'flex justify-end space-x-2';
+            modal.appendChild(btnContainer);
+
+            // Cancel button
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.className = 'px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm';
+            cancelBtn.onclick = () => {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+                modal.classList.remove('scale-100');
+                modal.classList.add('scale-90');
+                setTimeout(() => overlay.remove(), 300);
+            };
+            btnContainer.appendChild(cancelBtn);
+
+            // Update button
+            const updateBtn = document.createElement('button');
+            updateBtn.textContent = 'Update';
+            updateBtn.className = 'px-3 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white text-sm';
+            updateBtn.onclick = () => {
+                const newStatus = select.value;
+                fetch(`/qr-batches/${batchId}/status`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update badge
+                            const badge = button.closest('td').querySelector('.status-text');
+                            const info = statusMap[newStatus];
+                            badge.className = `status-text inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${info.class}`;
+                            badge.innerHTML = `<i class="${info.icon} text-xs mr-2"></i>${info.text}`;
+                            button.dataset.status = newStatus;
+
+                            // Close modal
+                            overlay.classList.remove('opacity-100');
+                            overlay.classList.add('opacity-0');
+                            modal.classList.remove('scale-100');
+                            modal.classList.add('scale-90');
+                            setTimeout(() => overlay.remove(), 300);
+
+                            // Show success toast
+                            const toast = document.createElement('div');
+                            toast.className = 'fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg opacity-0 transform translate-y-[-20px] transition-all duration-300 z-50';
+                            toast.textContent = `Status Updated to "${info.text}"`;
+                            document.body.appendChild(toast);
+                            setTimeout(() => {
+                                toast.classList.add('opacity-100');
+                                toast.classList.remove('translate-y-[-20px]');
+                            }, 10);
+
+                            setTimeout(() => {
+                                toast.classList.remove('opacity-100');
+                                toast.classList.add('translate-y-[-20px]');
+                                setTimeout(() => toast.remove(), 300);
+                            }, 1800);
+
+                        } else {
+                            alert('Unable to update status.');
+                        }
                     })
-                        .then(response => {
-                            if(response.data.success){
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Status Updated!',
-                                    text: 'Status changed to ' + result.value,
-                                    timer: 1500,
-                                    showConfirmButton: false,
-                                    customClass: {
-                                        popup: 'rounded-xl shadow-2xl'
-                                    }
-                                });
+                    .catch(err => {
+                        console.error(err);
+                        alert('Error updating status.');
+                    });
+            };
+            btnContainer.appendChild(updateBtn);
 
-                                // Update button data-status
-                                button.dataset.status = result.value;
+            // Animate modal fade-in
+            setTimeout(() => {
+                overlay.classList.add('opacity-100');
+                modal.classList.remove('scale-90');
+                modal.classList.add('scale-100');
+            }, 10);
 
-                                // Update badge with proper icon, text and classes
-                                const badge = button.closest('td').querySelector('.status-text');
-
-                                // Define status mapping with all properties
-                                const statusMap = {
-                                    'pending': {
-                                        text: 'Pending for Print',
-                                        class: 'status-text inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800',
-                                        icon: 'fas fa-clock'
-                                    },
-                                    'sending': {
-                                        text: 'Sending for Print',
-                                        class: 'status-text inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800',
-                                        icon: 'fas fa-paper-plane'
-                                    },
-                                    'received': {
-                                        text: 'Received from Print',
-                                        class: 'status-text inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800',
-                                        icon: 'fas fa-inbox'
-                                    },
-                                    'verified': {
-                                        text: 'Verified & Completed',
-                                        class: 'status-text inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800',
-                                        icon: 'fas fa-check-circle'
-                                    }
-                                };
-
-                                const statusInfo = statusMap[result.value];
-                                if (statusInfo) {
-                                    // Update the entire badge content and classes
-                                    badge.className = statusInfo.class;
-                                    badge.innerHTML = `<i class="${statusInfo.icon} text-xs mr-2"></i>${statusInfo.text}`;
-                                }
-                            }
-                        })
-                        .catch(error => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Unable to update status.',
-                                customClass: {
-                                    popup: 'rounded-xl shadow-2xl'
-                                }
-                            });
-                        });
+            // Close modal if clicked outside
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('opacity-100');
+                    overlay.classList.add('opacity-0');
+                    modal.classList.remove('scale-100');
+                    modal.classList.add('scale-90');
+                    setTimeout(() => overlay.remove(), 300);
                 }
             });
         });

@@ -18,11 +18,12 @@
             alt="Tag My Info"
         />
         <div class="min-w-0 flex-1">
-            <h1 class="text-[20px] font-semibold text-[#a6705d] leading-tight truncate">
+            <h1 class="text-[20px] font-semibold text-[#a6705d] leading-tight truncate px-8">
                 @if(($qrDetails[0]->profile->type ?? '') === 'Human')
-                    Personal Information
+                    My Info
                 @else
-                    {{ ucfirst($qrDetails[0]->profile->type ?? 'Profile') }} Information
+{{--                    {{ ucfirst($qrDetails[0]->profile->type ?? 'Profile') }} Information--}}
+                    My Info
                 @endif
             </h1>
         </div>

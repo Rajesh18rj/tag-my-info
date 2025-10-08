@@ -3,7 +3,7 @@
         <img
             src="{{ $profile->profile_image
                    ? asset('storage/' . $profile->profile_image)
-                   : asset('images/empty.jpg') }}"
+                   : asset('empty.jpg') }}"
             alt="Profile Image"
             class="w-24 h-24 object-cover rounded-full border border-gray-300 shadow-sm"
             loading="lazy"

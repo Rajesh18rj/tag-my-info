@@ -26,7 +26,12 @@
             </div>
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+                <!-- Page Content -->
+                <main>
+                    <div id="app" class="max-w-6xl mx-auto text-sm">
+                        @yield('content')
+                    </div>
+                </main>
             </div>
         </div>
     </body>
