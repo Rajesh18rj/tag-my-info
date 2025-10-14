@@ -189,8 +189,8 @@ class QrBatchController extends Controller
         }
 
         $templates = [
-            'red' => public_path('red2.jpg'),
-            'yellow' => public_path('yellow2.jpg'),
+            'red' => public_path('red_new.jpg'),
+            'yellow' => public_path('yellow_new.jpg'),
         ];
         $fontPath = public_path('fonts/Roboto-Bold.ttf');
 
@@ -239,17 +239,17 @@ class QrBatchController extends Controller
                                 210, 210, imagesx($qrImg), imagesy($qrImg)
                             );
 
-                            imagecopy($template, $qrResized, 630, 74, 0, 0, 200, 200);
+                            imagecopy($template, $qrResized, 667, 95, 0, 0, 200, 200);
 
                             $black = imagecolorallocate($template, 0, 0, 0);
                             $darkGrey = imagecolorallocate($template, 130 , 130, 130);
 
                             $fontSize = 30;
 
-                            imagettftext($template, $fontSize, 90, 540, 280, $black, $font, "ID : " . (string)$qr->uid);
-                            imagettftext($template, $fontSize, 90, 540, 280, $darkGrey, $font, "ID : ");
-                            imagettftext($template, $fontSize, 90, 590, 280, $black, $font, "PIN : " . (string)$qr->pin);
-                            imagettftext($template, $fontSize, 90, 590, 280, $darkGrey, $font, "PIN : ");
+                            imagettftext($template, $fontSize, 90, 570, 300, $black, $font, "ID : " . (string)$qr->uid);
+                            imagettftext($template, $fontSize, 90, 570, 300, $darkGrey, $font, "ID : ");
+                            imagettftext($template, $fontSize, 90, 630, 300, $black, $font, "PIN : " . (string)$qr->pin);
+                            imagettftext($template, $fontSize, 90, 630, 300, $darkGrey, $font, "PIN : ");
 
                             ob_start();
                             imagepng($template);

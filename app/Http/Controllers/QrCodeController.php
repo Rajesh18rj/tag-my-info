@@ -223,7 +223,7 @@ class QrCodeController extends Controller
         $filename = "{$qr->code}.png";
 
         if ($qr->profile_type === 'Human') {
-            $templatePath = public_path('red2.jpg');
+            $templatePath = public_path('red_new.jpg');
 
             if (!is_file($templatePath)) {
                 return response('Template image missing at: ' . $templatePath, 500);
@@ -265,7 +265,7 @@ class QrCodeController extends Controller
             );
 
             // Composite QR onto template (moved right a bit)
-            imagecopy($template, $qrResized, 630, 74, 0, 0, 200, 200);
+            imagecopy($template, $qrResized, 667, 95, 0, 0, 200, 200);
 
             // Add ID and PIN text (rotated 90° vertical)
             $font = public_path('fonts/Roboto-Bold.ttf');
@@ -283,14 +283,14 @@ class QrCodeController extends Controller
             $fontSize = 30;
 
         // Full text as black (value part will remain)
-            imagettftext($template, $fontSize, 90, 540, 280, $black, $font, "ID : " . (string)$qr->uid);
+            imagettftext($template, $fontSize, 90, 570, 300, $black, $font, "ID : " . (string)$qr->uid);
 
         // Overdraw only the label in dark grey at same position
-            imagettftext($template, $fontSize, 90, 540, 280, $darkGrey, $font, "ID : ");
+            imagettftext($template, $fontSize, 90, 570, 300, $darkGrey, $font, "ID : ");
 
         // Same for PIN
-            imagettftext($template, $fontSize, 90, 590, 280, $black, $font, "PIN : " . (string)$qr->pin);
-            imagettftext($template, $fontSize, 90, 590, 280, $darkGrey, $font, "PIN : ");
+            imagettftext($template, $fontSize, 90, 630, 300, $black, $font, "PIN : " . (string)$qr->pin);
+            imagettftext($template, $fontSize, 90, 630, 300, $darkGrey, $font, "PIN : ");
 
 
             // Output as PNG
