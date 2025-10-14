@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex justify-center items-start py-0 px-3">
 
-<div class="w-full max-w-sm bg-white shadow-xl rounded-2xl border-2 border-[#a6705d] overflow-hidden">
+<div class="w-full max-w-sm bg-white shadow-2xl border-1 border-[#a6705d] overflow-hidden">
     <!-- Header -->
     <div class="bg-[#f7f4f2] px-4 py-3 flex items-center gap-3 border-b border-[#a6705d]/20 shadow-[0_1px_0_0_rgba(0,0,0,0.03)]">
         <img

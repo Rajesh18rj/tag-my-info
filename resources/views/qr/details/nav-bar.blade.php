@@ -167,6 +167,8 @@
                         Additional Information
                     </button>
                 </li>
+
+                @if($profile->allergies && $profile->allergies->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('allergies')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -176,6 +178,10 @@
                         Allergies
                     </button>
                 </li>
+                @endif
+
+
+                @if($profile->medications && $profile->medications->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('medications')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -185,6 +191,9 @@
                         Medications
                     </button>
                 </li>
+                @endif
+
+                @if($profile->vetDetails && $profile->vetDetails->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('vet-details')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -194,6 +203,9 @@
                         Vet Details
                     </button>
                 </li>
+                @endif
+
+                @if($profile->instructions && $profile->instructions->isNotEmpty())
                 <li>
                     <button onclick="scrollToSection('instructions')"
                             class="w-full flex items-center gap-3 px-4 py-3 rounded-xl
@@ -203,6 +215,8 @@
                         Instructions
                     </button>
                 </li>
+                @endif
+
             </ul>
         </div>
     @endif

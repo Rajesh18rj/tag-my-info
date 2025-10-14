@@ -44,7 +44,7 @@
 <div id="pet-owners" class="mt-0 rounded-xl overflow-hidden border border-[#a6705d]/30 bg-white">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-[#f7f4f2] border-b border-[#a6705d]/20">
-        <i class="fas fa-phone-volume text-[#a6705d] text-sm"></i>
+        <i class="fas fa-paw text-[#a6705d] text-sm"></i>
         <p class="font-semibold text-[#7a5547] text-sm">Pet Owners</p>
     </div>
 
@@ -53,32 +53,6 @@
         @if($profile->petOwners && $profile->petOwners->isNotEmpty())
             <ul class="space-y-2">
                 @foreach($profile->petOwners as $owner)
-                    @php
-                        $raw = (string) ($owner->contact_number ?? '');
-                        $digits = preg_replace('/\D+/', '', $raw);
-                        $isIndia = isset($profile->country) && strtolower($profile->country) === 'india';
-
-                        if ($isIndia) {
-                            $digitsNoLeading = ltrim($digits, '0');
-                            if (strpos($digitsNoLeading, '91') === 0) {
-                                $e164 = '+'.$digitsNoLeading;
-                            } else {
-                                $e164 = '+91'.$digitsNoLeading;
-                            }
-                            $tel = $digitsNoLeading ? 'tel:'.$e164 : '';
-                            $displayPrefix = '+91';
-                            $displayNumber = $raw;
-                        } else {
-                            if (strpos($raw, '+') === 0) {
-                                $tel = 'tel:'.preg_replace('/\s+/', '', $raw);
-                            } else {
-                                $tel = $digits ? 'tel:'.$digits : '';
-                            }
-                            $displayPrefix = '';
-                            $displayNumber = $raw;
-                        }
-                    @endphp
-
                     <li class="flex items-start gap-3 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition">
                         <div class="flex-1 min-w-0">
                             <div class="text-gray-900 text-sm font-medium">
@@ -88,20 +62,59 @@
                                 @endif
                             </div>
                             <div class="text-gray-700 text-sm break-words">
-                                @if($displayPrefix)
-                                    <span class="text-[#a6705d] font-medium tracking-wide mr-1">{{ $displayPrefix }}</span>
+                                @if(isset($profile->country) && strtolower($profile->country) === 'india')
+                                    <span class="text-[#a6705d] font-medium tracking-wide mr-1">+91</span>
+                                    {{ $owner->contact_number }}
+                                @else
+                                    {{ $owner->contact_number }}
                                 @endif
-                                {{ $displayNumber }}
                             </div>
                         </div>
 
-                        @if($tel)
-                            <a href="{{ $tel }}"
-                               class="shrink-0 inline-flex items-center justify-center rounded-md bg-green-400 text-white px-2.5 py-1.5 text-xs font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#a6705d] focus:ring-offset-2">
-                                <i class="fa-solid fa-phone mr-1 text-[11px]"></i>
-                                Call
-                            </a>
-                        @endif
+                        <!-- Call & WhatsApp buttons -->
+                        @php
+                            $num = trim($owner->contact_number ?? '');
+                            $cleanNum = $num ? preg_replace('/\s+/', '', $num) : '';
+
+                            // Phone link
+                            if ($cleanNum) {
+                                if (isset($profile->country) && strtolower($profile->country) === 'india') {
+                                    $tel = 'tel:+91' . $cleanNum;
+                                } else {
+                                    $tel = 'tel:' . $cleanNum;
+                                }
+                            } else {
+                                $tel = '';
+                            }
+
+                            // WhatsApp link
+                            if ($cleanNum) {
+                                if (isset($profile->country) && strtolower($profile->country) === 'india') {
+                                    $waLink = 'https://wa.me/91' . $cleanNum;
+                                } else {
+                                    $waLink = 'https://wa.me/' . $cleanNum;
+                                }
+                            } else {
+                                $waLink = '';
+                            }
+                        @endphp
+
+                        <div class="flex gap-2">
+                            @if($tel)
+                                <a href="{{ $tel }}"
+                                   class="shrink-0 inline-flex items-center justify-center rounded-md bg-blue-500 text-white px-2.5 py-1.5 text-xs font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-[#a6705d] focus:ring-offset-2">
+                                    <i class="fa-solid fa-phone mr-2 text-[13px]"></i>
+                                    Call
+                                </a>
+                            @endif
+
+                            @if($waLink)
+                                <a href="{{ $waLink }}" target="_blank"
+                                   class="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-[#25D366] text-white text-xl shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#a6705d] focus:ring-offset-2">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            @endif
+                        </div>
                     </li>
                 @endforeach
             </ul>
@@ -110,6 +123,7 @@
         @endif
     </div>
 </div>
+
 
 
 <!-- Additional Information -->
@@ -148,7 +162,7 @@
     </div>
 </div>
 
-<!-- Allergies -->
+@if($profile->allergies && $profile->allergies->isNotEmpty())<!-- Allergies -->
 <div id="allergies" class="mt-0 rounded-2xl overflow-hidden border border-orange-200 bg-white">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-orange-50 border-b border-orange-200">
@@ -160,7 +174,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->allergies && $profile->allergies->isNotEmpty())
             <ul class="space-y-2.5">
                 @foreach($profile->allergies as $allergy)
                     <li class="rounded-lg border border-orange-200/70 bg-orange-50/40 p-3">
@@ -189,12 +202,11 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No allergies recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
 
+@if($profile->medications && $profile->medications->isNotEmpty())
 <!-- Medications -->
 <div id="medications"  class="mt-0 rounded-2xl overflow-hidden border border-emerald-200 bg-white">
     <!-- Header -->
@@ -207,7 +219,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->medications && $profile->medications->isNotEmpty())
             <ul class="space-y-2.5">
                 @foreach($profile->medications as $med)
                     <li class="rounded-lg border border-emerald-200/70 bg-emerald-50/40 p-3">
@@ -256,12 +267,11 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No medications recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
 
+@if($profile->vetDetails && $profile->vetDetails->isNotEmpty())
 <!-- Vet Details -->
 <div id="vet-details" class="mt-0 rounded-2xl overflow-hidden border border-blue-200 bg-white">
     <!-- Header -->
@@ -274,7 +284,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->vetDetails && $profile->vetDetails->isNotEmpty())
             <ul class="space-y-2">
                 @foreach($profile->vetDetails as $vet)
                     <li class="rounded-lg border border-blue-200/70 bg-blue-50/40 p-3">
@@ -313,12 +322,11 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No vet details recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
 
+@if($profile->instructions && $profile->instructions->isNotEmpty())
 <!-- Instructions -->
 <div id="instructions" class="mt-0 rounded-2xl overflow-hidden border border-gray-200 bg-white mb-14">
     <!-- Header -->
@@ -331,7 +339,6 @@
 
     <!-- Body -->
     <div class="p-3">
-        @if($profile->instructions && $profile->instructions->isNotEmpty())
             <ul class="space-y-2">
                 @foreach($profile->instructions as $instruction)
                     <li class="rounded-lg border border-gray-200/70 bg-gray-50/40 p-3">
@@ -360,9 +367,12 @@
                     </li>
                 @endforeach
             </ul>
-        @else
-            <p class="text-gray-400 text-sm"><em>No instructions recorded.</em></p>
-        @endif
     </div>
 </div>
+@endif
 
+@if(
+    (!$profile->instructions || $profile->instructions->isEmpty())
+)
+    <div class="mt-12"></div>
+@endif
