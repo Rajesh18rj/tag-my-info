@@ -162,7 +162,8 @@
     </div>
 </div>
 
-@if($profile->allergies && $profile->allergies->isNotEmpty())<!-- Allergies -->
+@if($profile->allergies && $profile->allergies->isNotEmpty())
+    <!-- Allergies -->
 <div id="allergies" class="mt-0 rounded-2xl overflow-hidden border border-orange-200 bg-white">
     <!-- Header -->
     <div class="flex items-center gap-2 px-3 py-2 bg-orange-50 border-b border-orange-200">
