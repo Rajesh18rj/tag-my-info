@@ -1,5 +1,6 @@
 @foreach($qrcodes as $qr)
-    <tr class="border-b hover:bg-red-50 transition">
+    <tr class="border-b hover:bg-red-50 transition" data-uid="{{ strtolower($qr->uid) }}"
+    >
         <td class="py-2 px-4">{{ $qr->id }}</td>
         <td class="py-2 px-4 font-mono text-sm">
         <span @class([

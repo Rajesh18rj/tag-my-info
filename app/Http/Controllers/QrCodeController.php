@@ -319,15 +319,19 @@ class QrCodeController extends Controller
     public function filter(Request $request)
     {
         $type = $request->type;
+        $uid  = $request->uid;
 
-        $qrcodes = QrCode::when($type, function ($query) use ($type) {
-            $query->where('profile_type', $type);
-        })
+        $qrcodes = QrCode::query()
+            ->when($type, function ($query) use ($type) {
+                $query->where('profile_type', $type);
+            })
+            ->when($uid, function ($query) use ($uid) {
+                $query->where('uid', 'like', "%{$uid}%");
+            })
             ->orderBy('id', 'desc')
             ->paginate(15)
-            ->withQueryString(); // keeps ?type= in pagination URLs
+            ->withQueryString(); // keeps ?type=&uid= in pagination URLs
 
-        // Always return JSON if it's an AJAX request
         if ($request->ajax()) {
             return response()->json([
                 'rows'       => view('qr.qr-list-rows', compact('qrcodes'))->render(),
@@ -335,9 +339,9 @@ class QrCodeController extends Controller
             ]);
         }
 
-        // Fallback for direct visits (not AJAX)
         return view('qr.qr-list', compact('qrcodes'));
     }
+
 
 
 }
