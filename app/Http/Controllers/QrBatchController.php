@@ -121,7 +121,7 @@ class QrBatchController extends Controller
 //
 //        foreach ($batch->qrcodes as $qr) {
 //            // Build QR contents
-//            $data = url('/view-details/' . $qr->uid);
+//            $data = url('/view/' . $qr->uid);
 //
 //            $qrImage = Builder::create()
 //                ->writer(new PngWriter())
@@ -238,7 +238,7 @@ class QrBatchController extends Controller
 
         $serial = 1;
         foreach ($batch->qrcodes as $qr) {
-            $data = url('/view-details/' . $qr->uid);
+            $data = url('/view/' . $qr->uid);
 
             $qrImage = Builder::create()
                 ->writer(new PngWriter())

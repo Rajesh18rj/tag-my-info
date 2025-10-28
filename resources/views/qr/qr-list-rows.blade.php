@@ -19,7 +19,7 @@
         </td>
         <td class="py-2 px-4">{{ $qr->code }}</td>
         <td class="py-2 px-4 flex justify-center items-center">
-            {!! QrCode::size(90)->generate(url('/view-details/' . $qr->uid)) !!}
+            {!! QrCode::size(90)->generate(url('/view/' . $qr->uid)) !!}
         </td>
         <td class="py-2 px-4">
             @if($qr->status)

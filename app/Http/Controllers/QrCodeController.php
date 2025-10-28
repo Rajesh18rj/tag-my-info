@@ -212,7 +212,7 @@ class QrCodeController extends Controller
         $qr = \App\Models\QrCode::findOrFail($id);
 
         // Build QR (Endroid)
-        $data = url('/view-details/' . $qr->uid);
+        $data = url('/view/' . $qr->uid);
         $result = \Endroid\QrCode\Builder\Builder::create()
             ->writer(new \Endroid\QrCode\Writer\PngWriter())
             ->data($data)
