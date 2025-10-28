@@ -220,7 +220,9 @@ class QrCodeController extends Controller
             ->margin(10)
             ->build();
 
-        $filename = "{$qr->code}.png";
+        // Updated filename format (same as batch)
+        $batch = $qr->batch; // assuming relationship exists: QrCode belongsTo QrBatch
+        $filename = "batch_{$qr->profile_type[0]}{$batch->batch_no}_{$qr->code}.png";
 
         if ($qr->profile_type === 'Human') {
             $templatePath = public_path('red_new.jpg');

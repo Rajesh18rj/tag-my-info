@@ -48,7 +48,11 @@
                     <div class="flex items-center">
                         <div class=" rounded-full p-2 mr-3">
                         </div>
-                        <span class="text-sm font-medium text-gray-900">#{{ $batch->id }}</span>
+                        <span class="text-sm font-medium text-gray-900">#
+{{--                            {{ $batch->batch_no }}--}}
+                            {{ $batch->profile_type[0] }}{{ $batch->batch_no }}
+
+                        </span>
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
@@ -58,7 +62,8 @@
 
                 <td class="px-4 py-4 whitespace-nowrap text-center">
                     @php
-                        $profileType = optional($batch->qrcodes->first())->profile_type ?? 'N/A';
+//                        $profileType = optional($batch->qrcodes->first())->profile_type ?? 'N/A';
+                        $profileType = $batch->profile_type ?? 'N/A';
                         $typeConfig = [
                             'Human' => ['icon' => '👤', 'color' => 'green'],
                             'Pet' => ['icon' => '🐾', 'color' => 'purple'],
@@ -67,7 +72,7 @@
                         $config = $typeConfig[$profileType] ?? ['icon' => '❓', 'color' => 'gray'];
                     @endphp
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-{{ $config['color'] }}-100 text-{{ $config['color'] }}-800">
-                                        {{ $config['icon'] }} {{ $profileType }}
+                            {{ $config['icon'] }} {{ $profileType }}
                     </span>
                 </td>
 

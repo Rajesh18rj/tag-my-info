@@ -14,7 +14,9 @@
         </td>
         <td class="py-2 px-4 font-mono text-sm">{{ $qr->uid }}</td>
         <td class="py-2 px-4 font-mono text-sm">{{ $qr->pin }}</td>
-        <td class="py-2 px-4 text-center">{{ $qr->batch_id }}</td>
+        <td class="py-2 px-4 text-center">
+            {{ $qr->batch ? ($qr->batch->profile_type[0] . $qr->batch->batch_no) : '—' }}
+        </td>
         <td class="py-2 px-4">{{ $qr->code }}</td>
         <td class="py-2 px-4 flex justify-center items-center">
             {!! QrCode::size(90)->generate(url('/view-details/' . $qr->uid)) !!}

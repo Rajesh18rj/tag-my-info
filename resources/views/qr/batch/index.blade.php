@@ -21,6 +21,11 @@
             @include('qr.batch.form')
         </div>
 
+        <!-- Card section-->
+        <div>
+            @include('qr.batch.card-section')
+        </div>
+
         <!-- Table Section -->
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
