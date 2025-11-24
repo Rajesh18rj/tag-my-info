@@ -225,7 +225,7 @@ class QrCodeController extends Controller
         $filename = "batch_{$qr->profile_type[0]}{$batch->batch_no}_{$qr->code}.png";
 
         if ($qr->profile_type === 'Human') {
-            $templatePath = public_path('red_new.jpg');
+            $templatePath = public_path('red7.jpg');
 
             if (!is_file($templatePath)) {
                 return response('Template image missing at: ' . $templatePath, 500);
@@ -309,6 +309,53 @@ class QrCodeController extends Controller
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
             ]);
         }
+
+        if ($qr->profile_type === 'Pet') {
+
+            // Build QR as SVG
+            $qrSvg = \Endroid\QrCode\Builder\Builder::create()
+                ->writer(new \Endroid\QrCode\Writer\SvgWriter())
+                ->data(url('/view/' . $qr->uid))
+                ->size(300)
+                ->margin(10)
+                ->build()
+                ->getString();
+
+            // Remove XML header
+            $qrSvg = preg_replace('/<\?xml.*?\?>/i', '', $qrSvg);
+
+            // Prepare text
+            $uid = htmlspecialchars($qr->uid, ENT_QUOTES);
+            $pin = htmlspecialchars($qr->pin, ENT_QUOTES);
+
+            $svg = <<<SVG
+                <svg width="300" height="410" xmlns="http://www.w3.org/2000/svg">
+
+                  <!-- QR Code -->
+                  <g transform="translate(0,0)">
+                      $qrSvg
+                  </g>
+
+                  <!-- ID + PIN (Bold + Bigger Font, Sample Style) -->
+                  <text x="25" y="345" font-size="26" font-family="Arial" font-weight="700" letter-spacing="2px" fill="#7a7a7a">ID</text>
+                  <text x="120" y="345" font-size="26" font-family="Arial" font-weight="700" fill="#7a7a7a">-</text>
+                  <text x="175" y="345" font-size="30" font-family="Roboto" font-weight="700" letter-spacing="2px" fill="black">{$uid}</text>
+
+                  <text x="25" y="390" font-size="26" font-family="Arial" font-weight="700" letter-spacing="2px" fill="#7a7a7a">PIN</text>
+                  <text x="120" y="390" font-size="26" font-family="Arial" font-weight="700" fill="#7a7a7a">-</text>
+                  <text x="175" y="385" font-size="30" font-family="Roboto" font-weight="700" letter-spacing="2px" fill="black">{$pin}</text>
+
+                </svg>
+            SVG;
+
+
+            return response($svg, 200, [
+                'Content-Type' => 'image/svg+xml',
+                'Content-Disposition' => 'attachment; filename="'.$filename.'.svg"',
+            ]);
+        }
+
+
 
         // Non-human: return plain QR
         return response($result->getString(), 200, [

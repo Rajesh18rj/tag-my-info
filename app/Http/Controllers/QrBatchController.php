@@ -253,8 +253,8 @@ class QrBatchController extends Controller
             //  If Human → use yellow/red templates
             if ($batch->profile_type === 'Human') {
                 $templates = [
-                    'red' => public_path('red_new.jpg'),
-                    'yellow' => public_path('yellow_new.jpg'),
+                    'red' => public_path('red7.jpg'),
+                    'yellow' => public_path('yellow7.jpg'),
                 ];
 
                 foreach ($templates as $folder => $templatePath) {
@@ -312,6 +312,55 @@ class QrBatchController extends Controller
                     }
                 } // end foreach template
             }
+
+            //  PET → QR + ID + PIN text at bottom
+// PET → SVG QR + ID + PIN text (same style as single download)
+            else if ($batch->profile_type === 'Pet') {
+
+                // Build QR SVG
+                $qrSvg = \Endroid\QrCode\Builder\Builder::create()
+                    ->writer(new \Endroid\QrCode\Writer\SvgWriter())
+                    ->data(url('/view/' . $qr->uid))
+                    ->size(300)
+                    ->margin(10)
+                    ->build()
+                    ->getString();
+
+                // Remove XML header
+                $qrSvg = preg_replace('/<\?xml.*?\?>/i', '', $qrSvg);
+
+                // Escape values
+                $uid = htmlspecialchars($qr->uid, ENT_QUOTES);
+                $pin = htmlspecialchars($qr->pin, ENT_QUOTES);
+
+                // Final SVG with same style as single download
+                $svg = <<<SVG
+                    <svg width="300" height="410" xmlns="http://www.w3.org/2000/svg">
+
+                      <!-- QR Code -->
+                      <g transform="translate(0,0)">
+                          $qrSvg
+                      </g>
+
+                      <!-- ID + PIN -->
+                      <text x="25" y="345" font-size="26" font-family="Arial" font-weight="700" letter-spacing="2px" fill="#7a7a7a">ID</text>
+                      <text x="120" y="345" font-size="26" font-family="Arial" font-weight="700" fill="#7a7a7a">-</text>
+                      <text x="175" y="345" font-size="30" font-family="Roboto" font-weight="700" letter-spacing="2px" fill="black">{$uid}</text>
+
+                      <text x="25" y="390" font-size="26" font-family="Arial" font-weight="700" letter-spacing="2px" fill="#7a7a7a">PIN</text>
+                      <text x="120" y="390" font-size="26" font-family="Arial" font-weight="700" fill="#7a7a7a">-</text>
+                      <text x="175" y="390" font-size="30" font-family="Roboto" font-weight="700" letter-spacing="2px" fill="black">{$pin}</text>
+
+                    </svg>
+                SVG;
+
+                // ZIP entry name
+                $entryName = "batch_{$batch->profile_type[0]}{$batch->batch_no}_{$filename}_{$serial}.svg";
+
+                // Add SVG to ZIP
+                $zip->addFromString($entryName, $svg);
+            }
+
 
             //  For Pet or Valuables → plain QR, no folders
             else {

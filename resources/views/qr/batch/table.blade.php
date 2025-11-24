@@ -89,13 +89,83 @@
 
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-center space-x-2">
-                        <a href="{{ route('qr.qr-batches.download', $batch) }}"
-                           class="inline-flex items-center bg-teal-500 hover:bg-teal-600 text-white text-sm px-3 py-1 rounded-lg transition-colors">
-                            <i class="fas fa-download text-xs mr-1"></i>
-                            ZIP
+                        <a
+                            href="{{ route('qr.qr-batches.download', $batch) }}"
+                            id="downloadZipBtn"
+                            class="inline-flex items-center bg-teal-500 hover:bg-teal-600 text-white text-sm px-3 py-1 rounded-lg transition-colors relative"
+                        >
+            <span id="zipIcon">
+                <i class="fas fa-download text-xs mr-1"></i>
+            </span>
+                            <span id="zipText">ZIP</span>
+
+                            <!-- Spinner -->
+                            <svg
+                                id="zipSpinner"
+                                class="animate-spin h-4 w-4 ml-2 text-white hidden"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle
+                                    class="opacity-25"
+                                    cx="12" cy="12" r="10"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                ></circle>
+                                <path
+                                    class="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                ></path>
+                            </svg>
                         </a>
                     </div>
                 </td>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const btn = document.getElementById("downloadZipBtn");
+                        const spinner = document.getElementById("zipSpinner");
+                        const text = document.getElementById("zipText");
+                        const icon = document.getElementById("zipIcon");
+
+                        btn.addEventListener("click", function (e) {
+                            e.preventDefault();
+
+                            // Show spinner and update UI
+                            spinner.classList.remove("hidden");
+                            icon.classList.add("hidden");
+                            text.textContent = "Downloading...";
+                            btn.classList.add("opacity-50", "pointer-events-none");
+
+                            // Start file download
+                            const url = this.getAttribute("href");
+                            fetch(url)
+                                .then(response => {
+                                    if (!response.ok) throw new Error("Network error");
+                                    return response.blob();
+                                })
+                                .then(blob => {
+                                    const link = document.createElement("a");
+                                    link.href = window.URL.createObjectURL(blob);
+                                    link.download = "qr_batch.zip";
+                                    link.click();
+                                })
+                                .catch(error => {
+                                    alert("Download failed!");
+                                    console.error(error);
+                                })
+                                .finally(() => {
+                                    // Hide spinner and restore button state
+                                    spinner.classList.add("hidden");
+                                    icon.classList.remove("hidden");
+                                    text.textContent = "ZIP";
+                                    btn.classList.remove("opacity-50", "pointer-events-none");
+                                });
+                        });
+                    });
+                </script>
 
                 <td class="px-0 py-4 whitespace-nowrap">
                     <div class="flex flex-col items-center space-y-2">
